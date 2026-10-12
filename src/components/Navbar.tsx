@@ -5,11 +5,22 @@ const navLinks = [
   { href: '#hero', label: 'Home' },
   { href: '#why-nord', label: 'Why NORD' },
   { href: '#portfolio', label: 'Work' },
+  { href: '/showroom', label: '3D Lab', isLab: true },
   { href: '#reviews', label: 'Reviews' },
   { href: '#contact', label: 'Contact' },
 ]
 
-export default function Navbar() {
+interface NavbarProps {
+  currentView?: 'home' | 'showroom'
+  onNavigateToShowroom?: () => void
+  onNavigateToHome?: (sectionId?: string) => void
+}
+
+export default function Navbar({
+  currentView = 'home',
+  onNavigateToShowroom,
+  onNavigateToHome,
+}: NavbarProps) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -84,22 +95,54 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
+              id={link.isLab ? 'nav-link-showroom' : undefined}
+              onClick={(e) => {
+                if (link.isLab) {
+                  e.preventDefault()
+                  if (onNavigateToShowroom) {
+                    onNavigateToShowroom()
+                  } else {
+                    window.history.pushState({}, '', '/showroom')
+                    window.dispatchEvent(new PopStateEvent('popstate'))
+                  }
+                } else if (currentView === 'showroom') {
+                  e.preventDefault()
+                  if (onNavigateToHome) {
+                    onNavigateToHome(link.href.replace('#', ''))
+                  } else {
+                    window.history.pushState({}, '', '/' + link.href)
+                    window.dispatchEvent(new PopStateEvent('popstate'))
+                  }
+                }
+              }}
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontSize: '0.8rem',
-                color: '#7a7a7a',
+                color: link.isLab ? '#e2e8f0' : '#7a7a7a',
                 textDecoration: 'none',
                 letterSpacing: '0.05em',
                 transition: 'color 0.2s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
               }}
               onMouseEnter={e => {
                 ;(e.currentTarget as HTMLAnchorElement).style.color = '#e8e8e8'
               }}
               onMouseLeave={e => {
-                ;(e.currentTarget as HTMLAnchorElement).style.color = '#7a7a7a'
+                ;(e.currentTarget as HTMLAnchorElement).style.color = link.isLab ? '#e2e8f0' : '#7a7a7a'
               }}
             >
               {link.label}
+              {link.isLab && (
+                <span
+                  className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"
+                  style={{
+                    boxShadow: '0 0 6px #10b981',
+                  }}
+                  title="Live WebGL Playground"
+                />
+              )}
             </a>
           ))}
           <a
@@ -187,7 +230,27 @@ export default function Navbar() {
               <motion.a
                 key={link.href}
                 href={link.href}
-                onClick={() => setMenuOpen(false)}
+                id={link.isLab ? 'nav-mobile-link-showroom' : undefined}
+                onClick={(e) => {
+                  setMenuOpen(false)
+                  if (link.isLab) {
+                    e.preventDefault()
+                    if (onNavigateToShowroom) {
+                      onNavigateToShowroom()
+                    } else {
+                      window.history.pushState({}, '', '/showroom')
+                      window.dispatchEvent(new PopStateEvent('popstate'))
+                    }
+                  } else if (currentView === 'showroom') {
+                    e.preventDefault()
+                    if (onNavigateToHome) {
+                      onNavigateToHome(link.href.replace('#', ''))
+                    } else {
+                      window.history.pushState({}, '', '/' + link.href)
+                      window.dispatchEvent(new PopStateEvent('popstate'))
+                    }
+                  }
+                }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.07 }}
@@ -198,9 +261,20 @@ export default function Navbar() {
                   color: '#e8e8e8',
                   textDecoration: 'none',
                   letterSpacing: '-0.04em',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.8rem',
                 }}
               >
                 {link.label}
+                {link.isLab && (
+                  <span
+                    className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"
+                    style={{
+                      boxShadow: '0 0 10px #10b981',
+                    }}
+                  />
+                )}
               </motion.a>
             ))}
           </motion.div>

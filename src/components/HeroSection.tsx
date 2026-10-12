@@ -1,43 +1,9 @@
-import { useRef, useCallback, Suspense, useState, useEffect } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { Environment, Stars, AdaptiveDpr } from '@react-three/drei'
-import { EffectComposer, Bloom, Vignette, ChromaticAberration } from '@react-three/postprocessing'
-import { BlendFunction } from 'postprocessing'
+import { useRef, useEffect, useState } from 'react'
 import * as THREE from 'three'
-import Monolith from './Monolith'
-
-function Scene({ mouse }: { mouse: React.MutableRefObject<[number, number]> }) {
-  return (
-    <>
-      <ambientLight intensity={0.1} />
-      <directionalLight position={[5, 8, 3]} intensity={1.2} color="#c8f0ff" />
-      <pointLight position={[-5, -3, -5]} intensity={0.5} color="#4a6080" />
-      <pointLight position={[3, 5, 2]} intensity={0.3} color="#ffffff" />
-      <Stars radius={120} depth={60} count={2000} factor={4} fade speed={0.5} />
-      <Suspense fallback={null}>
-        <Monolith mouse={mouse} />
-        <Environment preset="night" />
-      </Suspense>
-      <EffectComposer>
-        <Bloom
-          intensity={1.2}
-          luminanceThreshold={0.4}
-          luminanceSmoothing={0.9}
-          mipmapBlur
-        />
-        <ChromaticAberration
-          blendFunction={BlendFunction.NORMAL}
-          offset={new THREE.Vector2(0.0008, 0.0008)}
-        />
-        <Vignette eskil={false} offset={0.2} darkness={0.8} />
-      </EffectComposer>
-      <AdaptiveDpr pixelated />
-    </>
-  )
-}
 
 export default function HeroSection() {
-  const mouse = useRef<[number, number]>([0, 0])
+  const vantaRef = useRef<HTMLDivElement>(null)
+  const vantaEffectRef = useRef<{ destroy: () => void } | null>(null)
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -45,10 +11,85 @@ export default function HeroSection() {
     return () => clearTimeout(t)
   }, [])
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 2
-    const y = -(e.clientY / window.innerHeight - 0.5) * 2
-    mouse.current = [x * 0.015, y * 0.015]
+  useEffect(() => {
+    let isMounted = true
+
+    const initVanta = async () => {
+      try {
+        const OrigDataTexture = THREE.DataTexture
+        class PatchedDataTexture extends OrigDataTexture {
+          constructor(...args: ConstructorParameters<typeof OrigDataTexture>) {
+            super(...args)
+            this.needsUpdate = true
+          }
+        }
+
+        // Polyfill Number.prototype.clamp for Vanta color calculations
+        // @ts-expect-error - augmentation
+        if (typeof Number.prototype.clamp !== 'function') {
+          // @ts-expect-error - augmentation
+          Number.prototype.clamp = function (min: number, max: number) {
+            return Math.min(Math.max(Number(this), min), max)
+          }
+        }
+
+        const threeCompat = Object.assign({}, THREE, {
+          PlaneBufferGeometry: THREE.PlaneGeometry,
+          DataTexture: PatchedDataTexture,
+        })
+
+        if (typeof window !== 'undefined') {
+          // Expose THREE globally with legacy compatibility polyfill
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ;(window as any).THREE = threeCompat
+        }
+
+        // Dynamically load Vanta Birds
+        // @ts-expect-error - vanta has no official typescript declarations
+        const vantaModule = await import('vanta/dist/vanta.birds.min')
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const BIRDS = (window as any).VANTA?.BIRDS || vantaModule.default?.default || vantaModule.default || vantaModule
+
+        if (isMounted && vantaRef.current && !vantaEffectRef.current && typeof BIRDS === 'function') {
+          vantaEffectRef.current = BIRDS({
+            el: vantaRef.current,
+            THREE: threeCompat,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.0,
+            minWidth: 200.0,
+            scale: 1.0,
+            scaleMobile: 1.0,
+            backgroundColor: 0x050505,
+            color1: 0xff3b77,
+            color2: 0x00f5ff,
+            colorMode: 'varianceGradient',
+            birdSize: 1.2,
+            wingSpan: 30.0,
+            speedLimit: 5.0,
+            separation: 20.0,
+            alignment: 20.0,
+            cohesion: 20.0,
+            quantity: 4.0,
+          })
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ;(window as any).vantaEffect = vantaEffectRef.current
+        }
+      } catch (err) {
+        console.error('Failed to initialize Vanta Birds:', err)
+      }
+    }
+
+    initVanta()
+
+    return () => {
+      isMounted = false
+      if (vantaEffectRef.current) {
+        vantaEffectRef.current.destroy()
+        vantaEffectRef.current = null
+      }
+    }
   }, [])
 
   return (
@@ -56,26 +97,16 @@ export default function HeroSection() {
       id="hero"
       className="relative w-full h-screen overflow-hidden"
       style={{ background: '#050505' }}
-      onMouseMove={handleMouseMove}
     >
-      {/* 3D Canvas */}
-      <div id="webgl-canvas" className="absolute inset-0 w-full h-full">
-        <Canvas
-          camera={{ position: [0, 0, 6], fov: 45 }}
-          gl={{
-            antialias: true,
-            alpha: false,
-            powerPreference: 'high-performance',
-            toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 1.2,
-          }}
-          dpr={[1, 2]}
-        >
-          <Scene mouse={mouse} />
-        </Canvas>
-      </div>
+      {/* 3D Vanta Birds WebGL Canvas Container */}
+      <div
+        id="webgl-canvas"
+        ref={vantaRef}
+        className="absolute inset-0 w-full h-full"
+        style={{ zIndex: 1 }}
+      />
 
-      {/* Gradient overlays */}
+      {/* Subtle Dark Gradient overlays */}
       <div
         className="absolute inset-x-0 bottom-0 h-48 pointer-events-none z-10"
         style={{ background: 'linear-gradient(to top, #050505, transparent)' }}
@@ -217,7 +248,7 @@ export default function HeroSection() {
 
       {/* Bottom nav hint */}
       <div
-        className="absolute bottom-8 left-1/2 z-20 flex flex-col items-center gap-2"
+        className="absolute bottom-8 left-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none"
         style={{ transform: 'translateX(-50%)' }}
       >
         <span

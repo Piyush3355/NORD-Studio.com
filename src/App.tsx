@@ -1,10 +1,12 @@
-import { Suspense } from 'react'
+import { useState, useEffect, Suspense, lazy } from 'react'
 import Navbar from './components/Navbar'
 import HeroSection from './components/HeroSection'
 import WhyNordSection from './components/WhyNordSection'
 import PortfolioSection from './components/PortfolioSection'
 import ReviewsSection from './components/ReviewsSection'
 import ContactSection from './components/ContactSection'
+
+const ShowroomView = lazy(() => import('./components/showroom/ShowroomView'))
 
 function LoadingFallback() {
   return (
@@ -28,24 +30,74 @@ function LoadingFallback() {
           textTransform: 'uppercase',
         }}
       >
-        INITIALIZING...
+        INITIALIZING 3D LAB...
       </div>
     </div>
   )
 }
 
 export default function App() {
+  const [view, setView] = useState<'home' | 'showroom'>(() => {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname === '/showroom' || window.location.hash === '#showroom'
+        ? 'showroom'
+        : 'home'
+    }
+    return 'home'
+  })
+
+  useEffect(() => {
+    const handleLocation = () => {
+      const isShowroom =
+        window.location.pathname === '/showroom' || window.location.hash === '#showroom'
+      setView(isShowroom ? 'showroom' : 'home')
+    }
+
+    window.addEventListener('popstate', handleLocation)
+    window.addEventListener('hashchange', handleLocation)
+    return () => {
+      window.removeEventListener('popstate', handleLocation)
+      window.removeEventListener('hashchange', handleLocation)
+    }
+  }, [])
+
+  const navigateTo = (nextView: 'home' | 'showroom', sectionId?: string) => {
+    if (nextView === 'showroom') {
+      window.history.pushState({}, '', '/showroom')
+      setView('showroom')
+      window.scrollTo(0, 0)
+    } else {
+      window.history.pushState({}, '', sectionId ? `#${sectionId}` : '/')
+      setView('home')
+      if (sectionId) {
+        setTimeout(() => {
+          document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
+      }
+    }
+  }
+
   return (
     <Suspense fallback={<LoadingFallback />}>
       <div style={{ background: '#050505', minHeight: '100vh' }}>
-        <Navbar />
-        <main>
-          <HeroSection />
-          <WhyNordSection />
-          <PortfolioSection />
-          <ReviewsSection />
-          <ContactSection />
-        </main>
+        {view === 'showroom' ? (
+          <ShowroomView onBack={() => navigateTo('home')} />
+        ) : (
+          <>
+            <Navbar
+              currentView="home"
+              onNavigateToShowroom={() => navigateTo('showroom')}
+              onNavigateToHome={(sec) => navigateTo('home', sec)}
+            />
+            <main>
+              <HeroSection />
+              <WhyNordSection />
+              <PortfolioSection />
+              <ReviewsSection />
+              <ContactSection />
+            </main>
+          </>
+        )}
       </div>
     </Suspense>
   )

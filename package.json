@@ -18,7 +18,8 @@
     "leva": "^0.10.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "three": "^0.186.1"
+    "three": "^0.186.1",
+    "vanta": "^0.5.24"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.0",
