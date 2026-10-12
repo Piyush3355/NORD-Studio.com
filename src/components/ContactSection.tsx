@@ -28,9 +28,9 @@ import emailjs from '@emailjs/browser'
 //    No API key needed — it uses the free wa.me redirect.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID'   // ← paste from emailjs.com
+const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID'   // ← paste from emailjs.com
 const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'  // ← paste from emailjs.com
-const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY'   // ← paste from emailjs.com
+const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY'   // ← paste from emailjs.com
 
 const OWNER_WHATSAPP = '917875417830'           // country code + number (no +)
 
@@ -61,7 +61,7 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
 }
 
-const budgets = ['< ₹50K', '₹50K – ₹2L', '₹2L – ₹5L', '₹5L+', 'Let\'s talk']
+const budgets = ['< ₹5K', '₹5K – ₹50K', '₹50K – ₹1L', '₹1L+', 'Let\'s talk']
 
 export default function ContactSection() {
   const formRef = useRef<HTMLFormElement>(null)
