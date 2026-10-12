@@ -5,6 +5,7 @@ const navLinks = [
   { href: '#hero', label: 'Home' },
   { href: '#why-nord', label: 'Why NORD' },
   { href: '#portfolio', label: 'Work' },
+  { href: '#reviews', label: 'Reviews' },
   { href: '#contact', label: 'Contact' },
 ]
 

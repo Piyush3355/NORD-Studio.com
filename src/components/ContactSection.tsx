@@ -568,7 +568,7 @@ export default function ContactSection() {
               letterSpacing: '-0.04em',
             }}
           >
-            NORD
+            NORD STUDIOS
           </span>
           <span
             style={{
@@ -578,7 +578,7 @@ export default function ContactSection() {
               letterSpacing: '0.15em',
             }}
           >
-            © 2024 NORD Studio. All rights reserved.
+            © 2026 NORD Studio. All rights reserved.
           </span>
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
             <div

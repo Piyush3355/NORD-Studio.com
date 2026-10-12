@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import HeroSection from './components/HeroSection'
 import WhyNordSection from './components/WhyNordSection'
 import PortfolioSection from './components/PortfolioSection'
+import ReviewsSection from './components/ReviewsSection'
 import ContactSection from './components/ContactSection'
 
 function LoadingFallback() {
@@ -42,6 +43,7 @@ export default function App() {
           <HeroSection />
           <WhyNordSection />
           <PortfolioSection />
+          <ReviewsSection />
           <ContactSection />
         </main>
       </div>

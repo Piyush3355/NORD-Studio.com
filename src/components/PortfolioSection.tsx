@@ -1155,6 +1155,7 @@ export default function PortfolioSection() {
       <AnimatePresence>
         {selectedProject && (
           <ProjectModal
+            key={selectedProject.id}
             project={selectedProject}
             onClose={() => setSelectedProject(null)}
           />

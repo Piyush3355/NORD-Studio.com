@@ -127,7 +127,7 @@ test.describe('NORD Hero — WebGL / 3D Canvas Verification', () => {
 
     // Close modal via close button
     const closeBtn = page.locator('button[aria-label="Close dialog"]')
-    await closeBtn.dispatchEvent('click')
+    await closeBtn.click()
     await expect(modalHeading).not.toBeVisible({ timeout: 5000 })
   })
 
