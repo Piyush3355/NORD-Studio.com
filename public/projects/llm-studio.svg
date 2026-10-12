@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a14"/>
+      <stop offset="50%" stop-color="#07070d"/>
+      <stop offset="100%" stop-color="#030306"/>
+    </linearGradient>
+    <linearGradient id="cyanPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f5ff"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="neonCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1200" height="675" fill="url(#bgGrad)"/>
+
+  <!-- Subtle Neural Grid Pattern -->
+  <g opacity="0.12" stroke="#4f46e5" stroke-width="1">
+    <line x1="0" y1="135" x2="1200" y2="135"/>
+    <line x1="0" y1="270" x2="1200" y2="270"/>
+    <line x1="0" y1="405" x2="1200" y2="405"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+    <line x1="240" y1="0" x2="240" y2="675"/>
+    <line x1="480" y1="0" x2="480" y2="675"/>
+    <line x1="720" y1="0" x2="720" y2="675"/>
+    <line x1="960" y1="0" x2="960" y2="675"/>
+  </g>
+
+  <!-- Ambient Glow Blobs -->
+  <circle cx="280" cy="220" r="180" fill="#a855f7" opacity="0.1" filter="url(#softGlow)"/>
+  <circle cx="850" cy="400" r="220" fill="#00f5ff" opacity="0.08" filter="url(#softGlow)"/>
+
+  <!-- Left: Studio Chat & Token Interface Glass Card -->
+  <g transform="translate(80, 80)">
+    <!-- Container Card -->
+    <rect width="520" height="490" rx="14" fill="#0d0e1a" fill-opacity="0.85" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+    <rect width="520" height="490" rx="14" fill="none" stroke="url(#cyanPurple)" stroke-opacity="0.3" stroke-width="1.5"/>
+
+    <!-- Header Bar -->
+    <rect width="520" height="54" rx="14" fill="#131424" fill-opacity="0.9"/>
+    <circle cx="28" cy="27" r="6" fill="#ef4444"/>
+    <circle cx="48" cy="27" r="6" fill="#f59e0b"/>
+    <circle cx="68" cy="27" r="6" fill="#10b981"/>
+    <text x="100" y="32" fill="#e2e8f0" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="600" letter-spacing="1">NEXUS LLM STUDIO // v2.4</text>
+    
+    <rect x="420" y="15" width="80" height="24" rx="6" fill="#22c55e" fill-opacity="0.15" stroke="#22c55e" stroke-opacity="0.4"/>
+    <text x="432" y="31" fill="#4ade80" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600">CONNECTED</text>
+
+    <!-- User Prompt Bubble -->
+    <rect x="25" y="78" width="470" height="74" rx="10" fill="#16182e" stroke="rgba(255,255,255,0.06)"/>
+    <text x="45" y="105" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">PROMPT > Orchestrate multi-agent RAG workflow with vector search</text>
+    <text x="45" y="130" fill="#cbd5e1" font-family="'Inter', sans-serif" font-size="13">"Optimize latency, cache embeddings, and stream token response."</text>
+
+    <!-- Model Response & Streaming Output -->
+    <rect x="25" y="170" width="470" height="220" rx="10" fill="#0f1122" stroke="rgba(168,85,247,0.3)"/>
+    <text x="45" y="202" fill="#a855f7" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">✦ CLAUDE 3.5 SONNET &amp; GPT-4o INFERENCE [STREAMING]</text>
+    
+    <!-- Code block inside output -->
+    <rect x="45" y="220" width="430" height="150" rx="6" fill="#070810"/>
+    <text x="60" y="248" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="11">const <tspan fill="#f43f5e">pipeline</tspan> = new <tspan fill="#eab308">LLMOrchestrator</tspan>({</text>
+    <text x="75" y="272" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">  model: <tspan fill="#34d399">'hybrid-inference-agent'</tspan>,</text>
+    <text x="75" y="296" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">  streamTokens: <tspan fill="#f59e0b">true</tspan>, tps: <tspan fill="#00f5ff">142.4 tok/s</tspan>,</text>
+    <text x="75" y="320" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">  embeddingCache: <tspan fill="#a855f7">'Redis-Vector-Store'</tspan></text>
+    <text x="60" y="344" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="11">});</text>
+
+    <!-- Telemetry Status Bar -->
+    <rect x="25" y="410" width="470" height="54" rx="8" fill="#131426"/>
+    <text x="45" y="442" fill="#64748b" font-family="'JetBrains Mono', monospace" font-size="11">TOKENS: <tspan fill="#f8fafc">4,120</tspan>  |  LATENCY: <tspan fill="#22c55e">24ms</tspan>  |  TEMP: <tspan fill="#38bdf8">0.7</tspan></text>
+  </g>
+
+  <!-- Right: Neural Weights & Agent Architecture Visual -->
+  <g transform="translate(640, 80)">
+    <!-- Right Card -->
+    <rect width="480" height="490" rx="14" fill="#0d0e1a" fill-opacity="0.85" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+
+    <!-- Neural Architecture Header -->
+    <rect width="480" height="54" rx="14" fill="#131424" fill-opacity="0.9"/>
+    <text x="30" y="32" fill="#e2e8f0" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="600" letter-spacing="1">AGENT WORKFLOW TOPOLOGY</text>
+
+    <!-- Node 1: Input Embeddings -->
+    <g transform="translate(40, 95)">
+      <rect width="180" height="60" rx="8" fill="#181a30" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="25" cy="30" r="8" fill="#3b82f6" filter="url(#neonGlow)"/>
+      <text x="45" y="27" fill="#ffffff" font-family="'Inter', sans-serif" font-size="12" font-weight="600">Vector Embeddings</text>
+      <text x="45" y="45" fill="#60a5fa" font-family="'JetBrains Mono', monospace" font-size="10">dim: 1536 (Cosine)</text>
+    </g>
+
+    <!-- Connection Line 1 -->
+    <path d="M 220 125 L 290 125" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4 4" opacity="0.8"/>
+
+    <!-- Node 2: Context Retriever -->
+    <g transform="translate(290, 95)">
+      <rect width="150" height="60" rx="8" fill="#181a30" stroke="#00f5ff" stroke-width="1.5"/>
+      <circle cx="22" cy="30" r="8" fill="#00f5ff" filter="url(#neonGlow)"/>
+      <text x="40" y="27" fill="#ffffff" font-family="'Inter', sans-serif" font-size="12" font-weight="600">RAG Context</text>
+      <text x="40" y="45" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10">Top-K: 8 chunks</text>
+    </g>
+
+    <!-- Node 3: LLM Inference Engine -->
+    <g transform="translate(100, 210)">
+      <rect width="280" height="95" rx="10" fill="#1c1836" stroke="url(#cyanPurple)" stroke-width="2" filter="url(#softGlow)"/>
+      <text x="30" y="35" fill="#f8fafc" font-family="'Space Grotesk', sans-serif" font-size="16" font-weight="700">Multi-Model Agent Core</text>
+      <text x="30" y="60" fill="#c084fc" font-family="'JetBrains Mono', monospace" font-size="11">Routing: GPT-4o / Claude / DeepSeek</text>
+      <text x="30" y="80" fill="#4ade80" font-family="'JetBrains Mono', monospace" font-size="10">Status: Active Parallel Stream</text>
+    </g>
+
+    <!-- Connection Lines to Core -->
+    <path d="M 130 155 L 170 210" stroke="#00f5ff" stroke-width="2" opacity="0.6"/>
+    <path d="M 365 155 L 310 210" stroke="#a855f7" stroke-width="2" opacity="0.6"/>
+
+    <!-- Node 4: Structured Output Validator -->
+    <g transform="translate(80, 360)">
+      <rect width="320" height="90" rx="10" fill="#16182e" stroke="#10b981" stroke-width="1.5"/>
+      <circle cx="25" cy="45" r="7" fill="#10b981" filter="url(#neonGlow)"/>
+      <text x="45" y="35" fill="#ffffff" font-family="'Inter', sans-serif" font-size="13" font-weight="600">Deterministic Output Engine</text>
+      <text x="45" y="55" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">JSON Schema Validation: PASSED (100%)</text>
+      <text x="45" y="73" fill="#34d399" font-family="'JetBrains Mono', monospace" font-size="10">Zero Hallucination Guardrails Active</text>
+    </g>
+
+    <path d="M 240 305 L 240 360" stroke="#10b981" stroke-width="2" stroke-dasharray="3 3"/>
+  </g>
+</svg>
