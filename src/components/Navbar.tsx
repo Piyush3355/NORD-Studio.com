@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const navLinks = [
+interface NavItem {
+  href: string
+  label: string
+  isLab?: boolean
+}
+
+const navLinks: NavItem[] = [
   { href: '#hero', label: 'Home' },
+  { href: '#showcase', label: '3D Showcase' },
   { href: '#why-nord', label: 'Why NORD' },
+  { href: '#estimator', label: 'Estimator' },
   { href: '#portfolio', label: 'Work' },
-  { href: '/showroom', label: '3D Lab', isLab: true },
   { href: '#reviews', label: 'Reviews' },
   { href: '#contact', label: 'Contact' },
 ]

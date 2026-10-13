@@ -1,6 +1,8 @@
 import { useState, useEffect, Suspense, lazy } from 'react'
 import Navbar from './components/Navbar'
 import HeroSection from './components/HeroSection'
+import InteractiveShowcaseSection from './components/InteractiveShowcaseSection'
+import ProjectEstimatorSection from './components/ProjectEstimatorSection'
 import WhyNordSection from './components/WhyNordSection'
 import PortfolioSection from './components/PortfolioSection'
 import ReviewsSection from './components/ReviewsSection'
@@ -91,7 +93,9 @@ export default function App() {
             />
             <main>
               <HeroSection />
+              <InteractiveShowcaseSection />
               <WhyNordSection />
+              <ProjectEstimatorSection />
               <PortfolioSection />
               <ReviewsSection />
               <ContactSection />
