@@ -1,13 +1,9 @@
-import { useState, useRef, Suspense } from 'react'
+import { useState, useRef, useMemo, Suspense } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Float } from '@react-three/drei'
+import { OrbitControls, Center, useGLTF, Float } from '@react-three/drei'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
-import { MATERIAL_PRESETS, type MaterialPresetId } from './materials'
-import FurnitureModel from './FurnitureModel'
-import RoboticsModel from './RoboticsModel'
-import IndustrialModel from './IndustrialModel'
+import * as THREE from 'three'
 
-export type ModelCategory = 'furniture' | 'robotics' | 'industrial'
 export type StudioBgTheme = 'studio-slate' | 'cyber-aurora' | 'warm-gallery' | 'clean-platinum'
 
 const STUDIO_BG_PRESETS: Record<StudioBgTheme, { name: string; bg: string; accent: string }> = {
@@ -33,8 +29,192 @@ const STUDIO_BG_PRESETS: Record<StudioBgTheme, { name: string; bg: string; accen
   },
 }
 
-interface ShowroomViewProps {
-  onBack?: () => void
+interface ProductConfig {
+  id: string
+  tabLabel: string
+  icon: string
+  name: string
+  marketCategory: string
+  modelPath: string
+  targetSize: number
+  price: string
+  freelanceFee: string
+  turnaround: string
+  summary: string
+  specs: Array<{ title: string; subtitle: string; desc: string }>
+}
+
+const PRODUCTS: Record<string, ProductConfig> = {
+  chronograph: {
+    id: 'chronograph',
+    tabLabel: 'Horizon Watch',
+    icon: '⌚',
+    name: 'Horizon Tourbillon Chronograph',
+    marketCategory: 'Haute Horlogerie / Luxury Timepiece',
+    modelPath: '/models/ChronographWatch.glb',
+    targetSize: 2.35,
+    price: '$14,200 USD',
+    freelanceFee: '$4,500 – $6,500 USD',
+    turnaround: '10–14 Business Days',
+    summary: 'Luxury Swiss-calibre chronograph with high-gloss zirconium oxide bezel, multi-level tapped guilloché dial, flying tourbillon cage, and top-grain alligator strap.',
+    specs: [
+      {
+        title: 'Guilloché Sunburst Dial',
+        subtitle: 'Multi-layer Rhodium Relief with BGW9 Super-LumiNova',
+        desc: 'Hand-turned tapisserie engine guilloché dial reflecting dynamic light patterns. Equipped with diamond-cut indices.',
+      },
+      {
+        title: 'Zirconia Ceramic Bezel',
+        subtitle: 'Diamond-Polished Vickers Hardness 1500 HV',
+        desc: 'Sintered zirconium oxide ceramic bezel impervious to scratching, fastened with 8 functional grade-5 titanium spline screws.',
+      },
+      {
+        title: 'Flying Tourbillon Assembly',
+        subtitle: 'Hand-Chamfered Titanium Cage with Escapement',
+        desc: 'Precision micro-mechanical escapement compensating for gravitational variance at 28,800 vibrations per hour.',
+      },
+    ],
+  },
+  sneaker: {
+    id: 'sneaker',
+    tabLabel: 'Performance Sneaker',
+    icon: '👟',
+    name: 'Cyber-Knit Performance Sneaker',
+    marketCategory: 'High-Performance Athleisure Footwear',
+    modelPath: '/models/MaterialsVariantsShoe.glb',
+    targetSize: 2.45,
+    price: '$380 USD',
+    freelanceFee: '$2,400 – $3,600 USD',
+    turnaround: '7–10 Business Days',
+    summary: 'Parametrically engineered athletic running shoe featuring engineered knit upper, nitrogen-infused supercritical foam midsole, and zonal traction rubber.',
+    specs: [
+      {
+        title: 'Engineered Dynamic Knit',
+        subtitle: 'Variable-Density Hydrophobic Microfiber Weave',
+        desc: 'High-tensile jacquard knit upper with targeted zones of breathability and reinforced lateral lock-down.',
+      },
+      {
+        title: 'Supercritical Nitrogen Midsole',
+        subtitle: 'Dual-Density Foam with 82% Energy Return',
+        desc: 'Gas-expanded elastomer lattice structure offering exceptional rebound dynamics while maintaining ultra-low mass.',
+      },
+      {
+        title: 'Carbon Composite Propulsion Plate',
+        subtitle: 'Multi-Axial Spoon Geometry Carbon Insert',
+        desc: 'Full-length prepreg carbon fiber plate engineered for explosive toe-off kinetic transfer.',
+      },
+    ],
+  },
+  chair: {
+    id: 'chair',
+    tabLabel: 'Designer Chair',
+    icon: '🪑',
+    name: 'Eames Lounge & Ottoman Reimagined',
+    marketCategory: 'Architectural Furniture & Mid-Century Modern',
+    modelPath: '/models/SheenChair.glb',
+    targetSize: 2.5,
+    price: '$6,800 USD',
+    freelanceFee: '$2,800 – $4,200 USD',
+    turnaround: '8–12 Business Days',
+    summary: 'Iconic molded plywood lounger and ottoman with micro-faceted velvet sheen upholstery and die-cast aluminum swivel base.',
+    specs: [
+      {
+        title: 'Molded Plywood Shell',
+        subtitle: '7-Ply Cross-Laminated Santos Palisander Veneer',
+        desc: 'Ergonomically contoured hardwood veneers bonded under high pressure, finished with hand-rubbed organic oil polish.',
+      },
+      {
+        title: 'Micro-Faceted Velvet Sheen',
+        subtitle: 'Dual-Tone Anisotropic Sheen Shader Material',
+        desc: 'Premium velvet textile simulating real-world anisotropic light dispersion with custom roughness falloff.',
+      },
+      {
+        title: 'Die-Cast Aluminum Base',
+        subtitle: 'Five-Star Swivel Mechanism with Bronze Bushings',
+        desc: 'Mirror-polished aluminum five-star swivel pedestal with hand-turned black anodized risers.',
+      },
+    ],
+  },
+  car: {
+    id: 'car',
+    tabLabel: 'Concept Hypercar',
+    icon: '🏎️',
+    name: 'Apex Hypercar Aero Concept',
+    marketCategory: 'Automotive Design / Track Hypercar',
+    modelPath: '/models/CarConcept.glb',
+    targetSize: 2.7,
+    price: '$2,400,000 USD',
+    freelanceFee: '$6,500 – $9,500 USD',
+    turnaround: '14–20 Business Days',
+    summary: 'Track-focused electric hypercar design featuring active aero venturi tunnels, carbon monocoque cockpit, and high-downforce rear wing.',
+    specs: [
+      {
+        title: 'Carbon Monocoque Chassis',
+        subtitle: 'Autoclave Cured T1000 High-Modulus Carbon',
+        desc: 'Ultra-rigid passenger safety cell with integrated roll cage and sub-1000kg targeted structural mass.',
+      },
+      {
+        title: 'Active Venturi Aerodynamics',
+        subtitle: 'Underbody Ground-Effect Downforce Channels',
+        desc: 'Computational fluid dynamic optimized floor producing over 1,200kg of downforce at 250km/h.',
+      },
+      {
+        title: 'Carbon-Ceramic Braking Suite',
+        subtitle: '420mm Carbon-Silicon Discs with Monobloc Calipers',
+        desc: 'Ventilated ceramic composite brake discs with 10-piston forged titanium monobloc calipers.',
+      },
+    ],
+  },
+  helmet: {
+    id: 'helmet',
+    tabLabel: 'Orbital Helmet',
+    icon: '🪖',
+    name: 'Battle-Hardened Orbital Helmet',
+    marketCategory: 'Sci-Fi Props / Entertainment Asset',
+    modelPath: '/models/DamagedHelmet.glb',
+    targetSize: 2.3,
+    price: '$4,200 USD',
+    freelanceFee: '$1,800 – $2,800 USD',
+    turnaround: '5–8 Business Days',
+    summary: 'Photorealistic weathered helmet asset featuring procedural scratches, oxidized metal plating, and reflective polarized visor.',
+    specs: [
+      {
+        title: 'Multi-Layer Weathered PBR',
+        subtitle: 'Weathered Paint Chipping, Rust, and Scratches',
+        desc: 'Sub-surface paint layers exposed beneath battle impacts with micro-detail normal occlusion.',
+      },
+      {
+        title: 'Polarized HUD Visor',
+        subtitle: 'Reflective Thin-Film Interference Glass',
+        desc: 'Dual-curvature polycarbonate visor coated with holographic heads-up tactical interface glass.',
+      },
+    ],
+  },
+  boombox: {
+    id: 'boombox',
+    tabLabel: 'Retro Boombox',
+    icon: '📻',
+    name: 'StreetSonic Retro Boombox',
+    marketCategory: 'Consumer Electronics / Vintage Audio',
+    modelPath: '/models/BoomBox.glb',
+    targetSize: 2.45,
+    price: '$850 USD',
+    freelanceFee: '$1,600 – $2,400 USD',
+    turnaround: '5–7 Business Days',
+    summary: '80s street sound system with chrome rotary dials, dual cassette decks, high-excursion woofers, and analog VU meters.',
+    specs: [
+      {
+        title: 'Brushed Aluminum Accents',
+        subtitle: 'Diamond-Cut Rotary Knobs and Switches',
+        desc: 'Tactile switches and volume dials rendered with anisotropic metallic sheen.',
+      },
+      {
+        title: 'Dual Cassette Deck Mechanism',
+        subtitle: 'High-Precision Tape Transport Assembly',
+        desc: 'Twin mechanism with mechanical counter, mechanical eject dampers, and LED peak meters.',
+      },
+    ],
+  },
 }
 
 function FpsTracker({ onFps }: { onFps: (fps: number) => void }) {
@@ -59,96 +239,59 @@ function FpsTracker({ onFps }: { onFps: (fps: number) => void }) {
   return null
 }
 
-function StudioEnvironment({ accentColor = '#38bdf8' }: { accentColor?: string }) {
+function ShowcaseModel({
+  config,
+  autoRotate = true,
+}: {
+  config: ProductConfig
+  autoRotate?: boolean
+}) {
+  const gltf = useGLTF(config.modelPath)
+  const groupRef = useRef<THREE.Group>(null)
+
+  // Compute normalized scale so all models (shoes, chairs, watches, cars) fill the viewport heroically
+  const normalizedScene = useMemo(() => {
+    const cloned = gltf.scene.clone(true)
+    const box = new THREE.Box3().setFromObject(cloned)
+    const size = new THREE.Vector3()
+    box.getSize(size)
+    const maxDim = Math.max(size.x, size.y, size.z)
+    const target = config.targetSize || 2.4
+    const scaleFactor = target / (maxDim > 0 ? maxDim : 1)
+    cloned.scale.setScalar(scaleFactor)
+    return cloned
+  }, [gltf.scene, config.targetSize])
+
+  useFrame((_, delta) => {
+    if (groupRef.current && autoRotate) {
+      groupRef.current.rotation.y += delta * 0.25
+    }
+  })
+
   return (
-    <>
-      {/* Studio Ambient & Sky Bounce Lighting */}
-      <ambientLight intensity={0.9} />
-      <hemisphereLight args={['#94b8db', '#0f172a', 1.1]} />
-
-      {/* Front Key Softbox (directly illuminates model front and material finishes) */}
-      <directionalLight
-        position={[0, 4, 6]}
-        intensity={2.2}
-        color="#ffffff"
-        castShadow
-        shadow-mapSize={[1024, 1024]}
-      />
-
-      {/* High Angled Key Light */}
-      <directionalLight position={[6, 6, 4]} intensity={1.6} color="#f0f9ff" />
-
-      {/* Left Warm Fill Light */}
-      <directionalLight position={[-6, 3, -1]} intensity={1.1} color="#fff2e0" />
-
-      {/* Silhouette & Edge Accent Rim Light */}
-      <directionalLight position={[0, -2, -6]} intensity={2.4} color={accentColor} />
-
-      {/* Top Overhead Downlight */}
-      <directionalLight position={[0, 7, 0]} intensity={1.5} color="#c8f0ff" />
-
-      {/* Architectural Studio Stage Pedestal */}
-      <group position={[0, -0.68, 0]}>
-        {/* Main Stage Beveled Disc */}
-        <mesh position={[0, 0, 0]} receiveShadow>
-          <cylinderGeometry args={[2.7, 2.8, 0.16, 64]} />
-          <meshStandardMaterial
-            color="#131923"
-            metalness={0.7}
-            roughness={0.35}
-          />
-        </mesh>
-
-        {/* Top Surface Disc Inlay */}
-        <mesh position={[0, 0.081, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-          <ringGeometry args={[0.01, 2.66, 64]} />
-          <meshStandardMaterial
-            color="#18202d"
-            metalness={0.55}
-            roughness={0.45}
-          />
-        </mesh>
-
-        {/* Perimeter Glowing LED Rim Accent */}
-        <mesh position={[0, -0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[2.74, 0.018, 16, 64]} />
-          <meshStandardMaterial
-            color={accentColor}
-            emissive={accentColor}
-            emissiveIntensity={1.8}
-          />
-        </mesh>
-
-        {/* Technical Concentric Measurement Rings */}
-        <mesh position={[0, 0.083, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[1.5, 1.515, 64]} />
-          <meshBasicMaterial color={accentColor} transparent opacity={0.35} />
-        </mesh>
-        <mesh position={[0, 0.083, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[2.2, 2.215, 64]} />
-          <meshBasicMaterial color={accentColor} transparent opacity={0.2} />
-        </mesh>
-
-        {/* Soft Radial Contact Ambient Occlusion Shadow */}
-        <mesh position={[0, 0.085, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0, 2.2, 48]} />
-          <meshBasicMaterial color="#03060a" transparent opacity={0.55} depthWrite={false} />
-        </mesh>
-      </group>
-    </>
+    <group ref={groupRef}>
+      <Center>
+        <primitive object={normalizedScene} position={[0, 0, 0]} />
+      </Center>
+    </group>
   )
 }
 
+interface ShowroomViewProps {
+  onBack?: () => void
+}
+
 export default function ShowroomView({ onBack }: ShowroomViewProps) {
-  const [selectedModel, setSelectedModel] = useState<ModelCategory>('furniture')
-  const [selectedMaterial, setSelectedMaterial] = useState<MaterialPresetId>('walnut')
-  const [studioBg, setStudioBg] = useState<StudioBgTheme>('studio-slate')
+  const productKeys = Object.keys(PRODUCTS)
+  const [selectedKey, setSelectedKey] = useState<string>('chronograph')
+  const [theme, setTheme] = useState<StudioBgTheme>('studio-slate')
   const [autoRotate, setAutoRotate] = useState(true)
-  const [fps, setFps] = useState(60)
+  const [activeSpecIndex, setActiveSpecIndex] = useState(0)
+  const [fps, setFps] = useState<number>(60)
   const controlsRef = useRef<OrbitControlsImpl>(null)
 
-  const activeMaterial = MATERIAL_PRESETS[selectedMaterial]
-  const currentBgPreset = STUDIO_BG_PRESETS[studioBg]
+  const activeProduct = PRODUCTS[selectedKey] || PRODUCTS.chronograph
+  const activeBg = STUDIO_BG_PRESETS[theme]
 
   const handleResetCamera = () => {
     if (controlsRef.current) {
@@ -156,346 +299,440 @@ export default function ShowroomView({ onBack }: ShowroomViewProps) {
     }
   }
 
-  const modelSpecs: Record<ModelCategory, { name: string; polys: string; type: string; desc: string }> = {
-    furniture: {
-      name: 'Lounge Armchair & Pedestal',
-      polys: '18,420 Polygons',
-      type: 'Parametric Subdivision',
-      desc: 'Architectural ergonomics with dual-tone finish',
-    },
-    robotics: {
-      name: 'Autonomous Inspection Drone',
-      polys: '34,800 Polygons',
-      type: 'Mechanical Hard-Surface',
-      desc: 'Carbon composite quad-rotor with gimbal turret',
-    },
-    industrial: {
-      name: 'Aerospace Jet Turbine Cutaway',
-      polys: '46,120 Polygons',
-      type: 'Dual-Stage Impeller',
-      desc: 'Precision CAD assembly with radial blade manifold',
-    },
+  const handleEnquireWhatsApp = () => {
+    const text = encodeURIComponent(
+      `Hello Piyush! I am interested in commissioning a 3D CAD model like the *${activeProduct.name}* (${activeProduct.marketCategory}).\nEstimated Scope: ${activeProduct.freelanceFee}.`
+    )
+    window.open(`https://wa.me/917875417830?text=${text}`, '_blank')
   }
-
-  const currentSpec = modelSpecs[selectedModel]
 
   return (
     <div
       id="showroom-root"
-      className="fixed inset-0 w-full h-full select-none overflow-hidden"
+      className="relative w-full min-h-screen text-white select-none overflow-x-hidden flex flex-col justify-between"
       style={{
-        background: currentBgPreset.bg,
-        color: '#ffffff',
-        transition: 'background 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+        background: activeBg.bg,
+        transition: 'background 0.6s ease',
       }}
     >
-      {/* 3D WebGL Canvas Viewport */}
-      <div id="showroom-canvas-container" className="absolute inset-0 w-full h-full">
-        <Canvas
-          shadows
-          camera={{ position: [0, 1.2, 4.2], fov: 42 }}
-          gl={{
-            antialias: true,
-            alpha: true,
-            powerPreference: 'high-performance',
-          }}
-          dpr={[1, 2]}
-        >
-          <FpsTracker onFps={setFps} />
-          <StudioEnvironment accentColor={currentBgPreset.accent} />
-
-          <Suspense fallback={null}>
-            <Float speed={autoRotate ? 1.2 : 0} rotationIntensity={0.05} floatIntensity={0.15}>
-              {selectedModel === 'furniture' && <FurnitureModel materialConfig={activeMaterial} />}
-              {selectedModel === 'robotics' && <RoboticsModel materialConfig={activeMaterial} />}
-              {selectedModel === 'industrial' && <IndustrialModel materialConfig={activeMaterial} />}
-            </Float>
-          </Suspense>
-
-          <OrbitControls
-            ref={controlsRef}
-            makeDefault
-            autoRotate={autoRotate}
-            autoRotateSpeed={1.8}
-            enableDamping
-            dampingFactor={0.05}
-            minDistance={2.2}
-            maxDistance={8.5}
-            minPolarAngle={Math.PI / 8}
-            maxPolarAngle={Math.PI / 2 + 0.1}
-          />
-        </Canvas>
-      </div>
-
-      {/* ================= TOP NAVIGATION / HEADER ================= */}
+      {/* ================= TOP NAVIGATION HUD ================= */}
       <header
-        className="absolute top-0 inset-x-0 z-30 flex items-center justify-between p-4 md:p-6 pointer-events-none"
+        className="relative z-30 flex items-center justify-between px-6 py-4 border-b"
+        style={{
+          background: 'rgba(5, 8, 14, 0.85)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderColor: 'rgba(255, 255, 255, 0.08)',
+        }}
       >
-        {/* Back Link / Brand */}
-        <div className="flex items-center gap-4 pointer-events-auto">
+        {/* Back Button & Logo */}
+        <div className="flex items-center gap-4 sm:gap-6">
           <button
+            type="button"
             id="showroom-back-btn"
             onClick={onBack}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-black/60 backdrop-blur-xl text-neutral-300 hover:text-white hover:border-white/25 transition-all text-xs font-mono tracking-wider uppercase cursor-pointer"
+            className="flex items-center gap-2 px-3 py-1.5 rounded border text-xs font-mono tracking-wider transition-all cursor-pointer"
+            style={{
+              background: 'rgba(255, 255, 255, 0.04)',
+              borderColor: 'rgba(255, 255, 255, 0.12)',
+              color: '#c8f0ff',
+            }}
           >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="rotate-180">
-              <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Back to NORD
+            <span>←</span>
+            <span>Back to Studio</span>
           </button>
 
-          <div className="hidden lg:flex items-center gap-2 pl-2">
+          <div className="flex items-baseline gap-2">
             <span
-              className="font-bold text-sm tracking-tight text-white"
+              className="text-lg font-bold tracking-tight text-white"
               style={{ fontFamily: "'Space Grotesk', sans-serif" }}
             >
               NORD
             </span>
             <span
-              className="text-[10px] tracking-widest uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+              className="text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded"
+              style={{
+                background: 'rgba(56, 189, 248, 0.15)',
+                color: '#38bdf8',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+              }}
             >
               3D Lab
             </span>
           </div>
         </div>
 
-        {/* Center: Floating Model Switcher Tabs */}
-        <div className="pointer-events-auto">
-          <nav
-            id="showroom-model-tabs"
-            className="flex items-center gap-1 p-1 rounded-full border border-white/10 bg-black/75 backdrop-blur-2xl shadow-2xl"
+        {/* Center Title */}
+        <div className="hidden lg:flex flex-col items-center">
+          <span
+            className="text-xs font-mono font-semibold tracking-widest uppercase"
+            style={{ color: '#38bdf8' }}
           >
-            {(['furniture', 'robotics', 'industrial'] as ModelCategory[]).map((cat) => {
-              const active = selectedModel === cat
-              const labelMap: Record<ModelCategory, string> = {
-                furniture: 'Furniture',
-                robotics: 'Robotics',
-                industrial: 'Industrial',
-              }
-
-              return (
-                <button
-                  key={cat}
-                  id={`model-tab-${cat}`}
-                  onClick={() => setSelectedModel(cat)}
-                  className={`relative px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all cursor-pointer ${active
-                    ? 'text-black font-semibold shadow-md'
-                    : 'text-neutral-400 hover:text-white'
-                    }`}
-                  style={{
-                    background: active ? '#c8f0ff' : 'transparent',
-                    fontFamily: "'Space Grotesk', sans-serif",
-                  }}
-                >
-                  {labelMap[cat]}
-                </button>
-              )
-            })}
-          </nav>
+            Real Market Product CAD &amp; Specs
+          </span>
+          <span className="text-[11px] text-neutral-400 font-light">
+            Interactive commercial asset inspection • 360° Real-time WebGL
+          </span>
         </div>
 
-        {/* Top Right: Real-time FPS Counter & QA Badge */}
-        <div className="pointer-events-auto flex items-center gap-2.5">
+        {/* Right Status & Theme Selector */}
+        <div className="flex items-center gap-3">
+          {/* FPS Badge */}
           <div
             id="showroom-fps-counter"
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-black/60 backdrop-blur-xl text-neutral-300 font-mono text-xs tracking-wider shadow-lg"
+            className="hidden sm:flex items-center gap-2 px-3 py-1 rounded border text-[11px] font-mono"
+            style={{
+              background: 'rgba(0, 0, 0, 0.35)',
+              borderColor: 'rgba(255, 255, 255, 0.08)',
+              color: '#38bdf8',
+            }}
           >
-            <span
-              className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
-              style={{ boxShadow: '0 0 8px #10b981' }}
-            />
-            <span className="text-white font-semibold">
-              {fps && fps >= 55 ? fps : 60} FPS
-            </span>
-            <span className="text-neutral-500 text-[10px] hidden sm:inline">•</span>
-            <span className="text-emerald-400 text-[11px] font-sans tracking-normal hidden sm:inline font-medium">
-              QA Verified
-            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>{fps} FPS • Verified</span>
+          </div>
+
+          {/* Cyclorama Backdrop Presets */}
+          <div
+            id="showroom-backdrop-selector"
+            className="flex items-center gap-1 p-1 rounded-lg border"
+            style={{
+              background: 'rgba(0, 0, 0, 0.35)',
+              borderColor: 'rgba(255, 255, 255, 0.08)',
+            }}
+          >
+            {(Object.keys(STUDIO_BG_PRESETS) as StudioBgTheme[]).map((tKey) => {
+              const bg = STUDIO_BG_PRESETS[tKey]
+              const isCur = theme === tKey
+              return (
+                <button
+                  key={tKey}
+                  type="button"
+                  id={`backdrop-${tKey.split('-')[1]}`}
+                  onClick={() => setTheme(tKey)}
+                  title={bg.name}
+                  className="w-5 h-5 rounded-full transition-all cursor-pointer"
+                  style={{
+                    background: bg.accent,
+                    border: isCur ? '2px solid #ffffff' : '2px solid transparent',
+                    transform: isCur ? 'scale(1.15)' : 'scale(1)',
+                    boxShadow: isCur ? `0 0 10px ${bg.accent}` : 'none',
+                  }}
+                />
+              )
+            })}
           </div>
         </div>
       </header>
 
-      {/* ================= MODEL HUD SPECS (LEFT OVERLAY) ================= */}
-      <aside
-        className="absolute top-24 left-6 z-20 pointer-events-none hidden md:block max-w-xs"
-        style={{ fontFamily: "'Inter', sans-serif" }}
-      >
-        <div className="p-4 rounded-xl border border-white/10 bg-black/40 backdrop-blur-xl space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono tracking-widest text-sky-400 uppercase">
-              Live Model
-            </span>
-            <span className="w-1 h-1 rounded-full bg-sky-400" />
-            <span className="text-[10px] font-mono text-neutral-400">{currentSpec.polys}</span>
-          </div>
-          <h2
-            className="text-base font-semibold text-white tracking-tight"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-          >
-            {currentSpec.name}
-          </h2>
-          <p className="text-xs text-neutral-400 leading-relaxed">{currentSpec.desc}</p>
-          <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-neutral-400">
-            <span>Material: {activeMaterial.name}</span>
-            <span className="text-sky-300">Studio: {currentBgPreset.name}</span>
-          </div>
-        </div>
-      </aside>
-
-      {/* ================= BOTTOM DOCK: MATERIALS & CONTROLS ================= */}
-      <footer
-        className="absolute bottom-6 inset-x-0 z-30 flex items-center justify-between px-4 md:px-8 pointer-events-none"
-      >
-        {/* Helper Orbit Tip (Left) */}
-        <div className="hidden lg:flex items-center gap-2 text-[11px] font-mono text-neutral-400 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/5">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            <path d="M12 8v4l3 3" />
-          </svg>
-          Drag to orbit • Scroll to zoom
-        </div>
-
-        {/* Center Dock: Material Switchers & Auto-Rotate */}
-        <div className="pointer-events-auto mx-auto lg:mx-0">
+      {/* ================= MAIN 3D LAB VIEWPORT & SIDEBAR ================= */}
+      <main className="relative flex-1 w-full flex flex-col lg:flex-row items-stretch overflow-hidden">
+        {/* 3D Canvas Viewport */}
+        <div
+          id="showroom-canvas-container"
+          className="relative flex-1 min-h-[500px] lg:min-h-[640px] flex items-center justify-center overflow-hidden"
+        >
+          {/* ================= ELEVATED MODEL SWITCHER TABS (TOP OF CANVAS) ================= */}
           <div
-            id="showroom-bottom-dock"
-            className="flex items-center gap-3 p-2 rounded-2xl border border-white/10 bg-black/80 backdrop-blur-2xl shadow-2xl"
+            id="showroom-model-tabs"
+            className="absolute top-4 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:right-auto z-20 flex items-center gap-1.5 p-1.5 rounded-2xl border backdrop-blur-xl shadow-2xl overflow-x-auto max-w-full sm:max-w-[94%] scrollbar-none"
+            style={{
+              background: 'rgba(5, 8, 14, 0.88)',
+              borderColor: 'rgba(255, 255, 255, 0.12)',
+              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+            }}
           >
-            {/* Material Swatches */}
-            <div className="flex items-center gap-1.5 pr-2 border-r border-white/10">
-              {(Object.keys(MATERIAL_PRESETS) as MaterialPresetId[]).map((matId) => {
-                const mat = MATERIAL_PRESETS[matId]
-                const isSelected = selectedMaterial === matId
-
-                return (
-                  <button
-                    key={matId}
-                    id={`mat-btn-${matId}`}
-                    onClick={() => setSelectedMaterial(matId)}
-                    title={mat.name}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${isSelected
-                      ? 'bg-white/15 text-white border border-sky-300/40 shadow-inner'
-                      : 'text-neutral-400 hover:text-white hover:bg-white/5 border border-transparent'
-                      }`}
+            {productKeys.map((key) => {
+              const p = PRODUCTS[key]
+              const isSelected = key === selectedKey
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  id={`model-tab-${key}`}
+                  onClick={() => {
+                    setSelectedKey(key)
+                    setActiveSpecIndex(0)
+                  }}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer"
+                  style={{
+                    fontFamily: "'Space Grotesk', sans-serif",
+                    background: isSelected
+                      ? 'linear-gradient(135deg, rgba(56, 189, 248, 0.28) 0%, rgba(99, 102, 241, 0.35) 100%)'
+                      : 'transparent',
+                    border: isSelected
+                      ? '1px solid rgba(56, 189, 248, 0.6)'
+                      : '1px solid transparent',
+                    color: isSelected ? '#ffffff' : '#9ca3af',
+                    boxShadow: isSelected ? '0 0 18px rgba(56, 189, 248, 0.25)' : 'none',
+                  }}
+                >
+                  <span className="text-sm">{p.icon}</span>
+                  <span>{p.tabLabel}</span>
+                  <span
+                    className="text-[10px] px-1.5 py-0.5 rounded font-mono"
+                    style={{
+                      background: isSelected
+                        ? 'rgba(56, 189, 248, 0.3)'
+                        : 'rgba(255, 255, 255, 0.05)',
+                      color: isSelected ? '#c8f0ff' : '#6b7280',
+                    }}
                   >
-                    <span
-                      className="w-3.5 h-3.5 rounded-full border border-white/30 shadow-sm shrink-0"
-                      style={{ background: mat.swatch }}
-                    />
-                    <span className="hidden sm:inline font-mono text-[11px]">{mat.name}</span>
-                  </button>
-                )
-              })}
-            </div>
+                    {p.price}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
 
-            {/* Auto-Rotate Switch */}
+          {/* Three.js R3F Canvas */}
+          <div className="absolute inset-0 w-full h-full">
+            <Canvas
+              shadows
+              camera={{ position: [0, 0.8, 4.4], fov: 40 }}
+              gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+              dpr={[1, 2]}
+            >
+              <FpsTracker onFps={setFps} />
+              <ambientLight intensity={1.6} />
+              <directionalLight position={[5, 8, 5]} intensity={2.6} color="#ffffff" castShadow />
+              <directionalLight position={[-5, 4, 2]} intensity={1.4} color="#7dd3fc" />
+              <directionalLight position={[0, -3, 3]} intensity={0.9} color="#38bdf8" />
+              <directionalLight position={[0, 4, -4]} intensity={1.8} color="#e0f2fe" />
+
+              {/* Pedestal Stage Floor */}
+              <group position={[0, -1.3, 0]}>
+                <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
+                  <circleGeometry args={[3.0, 64]} />
+                  <meshStandardMaterial color="#0c131f" roughness={0.8} metalness={0.2} />
+                </mesh>
+                <mesh rotation={[-Math.PI / 2, 0, 0]}>
+                  <ringGeometry args={[2.95, 3.02, 64]} />
+                  <meshBasicMaterial color={activeBg.accent} transparent opacity={0.4} />
+                </mesh>
+              </group>
+
+              {/* 3D Normalized Real Model (No Price Tag) */}
+              <Suspense
+                fallback={
+                  <Float speed={2} rotationIntensity={0.2} floatIntensity={0.2}>
+                    <mesh>
+                      <boxGeometry args={[1, 1, 1]} />
+                      <meshStandardMaterial color="#1e293b" wireframe />
+                    </mesh>
+                  </Float>
+                }
+              >
+                <ShowcaseModel
+                  config={activeProduct}
+                  autoRotate={autoRotate}
+                />
+              </Suspense>
+
+              <OrbitControls
+                ref={controlsRef}
+                enableZoom={true}
+                enablePan={false}
+                maxPolarAngle={Math.PI / 2 + 0.1}
+                minPolarAngle={Math.PI / 4}
+                dampingFactor={0.06}
+              />
+            </Canvas>
+          </div>
+
+          {/* Canvas Floating Utility Buttons */}
+          <div className="absolute bottom-5 right-5 z-10 flex items-center gap-2">
             <button
+              type="button"
               id="showroom-autorotate-btn"
               onClick={() => setAutoRotate(!autoRotate)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all cursor-pointer ${autoRotate
-                ? 'bg-sky-400/15 text-sky-300 border border-sky-400/30'
-                : 'text-neutral-400 hover:text-white border border-white/5'
-                }`}
+              className="px-3 py-1.5 rounded-md border text-xs font-mono transition-all cursor-pointer backdrop-blur-md shadow-lg"
+              style={{
+                background: autoRotate ? 'rgba(56, 189, 248, 0.25)' : 'rgba(0, 0, 0, 0.65)',
+                borderColor: autoRotate ? 'rgba(56, 189, 248, 0.5)' : 'rgba(255, 255, 255, 0.12)',
+                color: autoRotate ? '#c8f0ff' : '#aaaaaa',
+              }}
             >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className={autoRotate ? 'animate-spin' : ''}
-                style={{ animationDuration: '6s' }}
-              >
-                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 11-.57-8.38l5.67-5.67" />
-              </svg>
-              <span>{autoRotate ? 'Auto: ON' : 'Auto: OFF'}</span>
+              {autoRotate ? '↻ Auto: ON' : '↻ Auto: OFF'}
             </button>
-
-            {/* Reset Camera button */}
             <button
-              id="showroom-reset-cam-btn"
+              type="button"
               onClick={handleResetCamera}
-              title="Reset Camera View"
-              className="p-1.5 rounded-xl text-neutral-400 hover:text-white hover:bg-white/10 transition-colors border border-transparent cursor-pointer"
+              className="px-3 py-1.5 rounded-md border text-xs font-mono transition-all cursor-pointer backdrop-blur-md text-neutral-300 shadow-lg"
+              style={{
+                background: 'rgba(0, 0, 0, 0.65)',
+                borderColor: 'rgba(255, 255, 255, 0.12)',
+              }}
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M3 12a9 9 0 019-9 9.75 9.75 0 016.74 2.74L21 8" />
-                <path d="M21 3v5h-5" />
-                <path d="M21 12a9 9 0 01-9 9 9.75 9.75 0 01-6.74-2.74L3 16" />
-                <path d="M8 16H3v5" />
-              </svg>
+              ⊙ Reset View
             </button>
+          </div>
 
-            {/* Studio Environment Background Theme Switcher */}
-            <div className="flex items-center gap-1.5 pl-2 border-l border-white/10">
-              {(Object.keys(STUDIO_BG_PRESETS) as StudioBgTheme[]).map((themeKey) => {
-                const preset = STUDIO_BG_PRESETS[themeKey]
-                const isActive = studioBg === themeKey
-                return (
-                  <button
-                    key={themeKey}
-                    id={`bg-btn-${themeKey}`}
-                    onClick={() => setStudioBg(themeKey)}
-                    title={`Backdrop: ${preset.name}`}
-                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${isActive
-                        ? 'bg-white/20 text-white border border-white/30 shadow-inner font-semibold'
-                        : 'text-neutral-400 hover:text-white hover:bg-white/5 border border-transparent'
-                      }`}
-                  >
-                    <span
-                      className="w-3 h-3 rounded-full border border-white/40 shrink-0"
-                      style={{
-                        background: preset.accent,
-                        boxShadow: isActive ? `0 0 8px ${preset.accent}` : 'none',
-                      }}
-                    />
-                    <span className="hidden xl:inline text-[10px]">{preset.name}</span>
-                  </button>
-                )
-              })}
-            </div>
+          {/* Bottom Left Interaction Guide */}
+          <div
+            className="absolute bottom-5 left-5 z-10 hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-lg border backdrop-blur-md pointer-events-none"
+            style={{
+              background: 'rgba(5, 8, 14, 0.65)',
+              borderColor: 'rgba(255, 255, 255, 0.08)',
+            }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '0.65rem',
+                color: '#94a3b8',
+              }}
+            >
+              Drag to orbit 360° • Scroll to zoom • CAD model normalized
+            </span>
           </div>
         </div>
 
-        {/* Bottom Right: Sleek WhatsApp CTA Button */}
-        <div className="pointer-events-auto">
-          <a
-            id="showroom-embed-cta"
-            href="https://wa.me/917875417830?text=Hi%20NORD%20Studio%2C%20I%20tested%20your%20interactive%203D%20Showroom%20and%20want%20to%20embed%20interactive%203D%20models%20in%20our%20store."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2.5 px-4 py-2.5 rounded-full font-medium text-xs tracking-wider uppercase transition-all shadow-xl cursor-pointer"
+        {/* Sidebar Specs & Commercial Feasibility */}
+        <aside
+          className="w-full lg:w-[420px] p-6 lg:p-8 border-t lg:border-t-0 lg:border-l flex flex-col justify-between overflow-y-auto"
+          style={{
+            background: 'rgba(5, 8, 14, 0.85)',
+            backdropFilter: 'blur(20px)',
+            borderColor: 'rgba(255, 255, 255, 0.08)',
+          }}
+        >
+          <div>
+            {/* Category & Icon */}
+            <div className="flex items-center justify-between mb-3 pb-3 border-b border-white/5">
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '0.65rem',
+                  color: '#38bdf8',
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {activeProduct.marketCategory}
+              </span>
+              <span className="text-2xl">{activeProduct.icon}</span>
+            </div>
+
+            {/* Product Title */}
+            <h2
+              className="text-2xl sm:text-3xl font-extrabold text-white mb-2 leading-tight"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              {activeProduct.name}
+            </h2>
+
+            {/* Pricing Tag */}
+            <div className="flex items-baseline gap-2.5 mb-5">
+              <span className="text-3xl font-extrabold text-cyan-300 font-mono">
+                {activeProduct.price}
+              </span>
+              <span className="text-xs text-neutral-400 font-mono uppercase">
+                Retail Market Valuation
+              </span>
+            </div>
+
+            {/* Summary */}
+            <p className="text-xs text-neutral-300 leading-relaxed mb-6 font-light">
+              {activeProduct.summary}
+            </p>
+
+            {/* Engineering Hotspots Tabs */}
+            <div className="mb-6">
+              <div className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider mb-2.5">
+                CAD Micro-Specifications ({activeProduct.specs.length})
+              </div>
+              <div className="flex gap-1.5 mb-3">
+                {activeProduct.specs.map((h, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setActiveSpecIndex(i)}
+                    className="px-2.5 py-1 rounded text-[11px] font-mono transition-all cursor-pointer"
+                    style={{
+                      background:
+                        activeSpecIndex === i
+                          ? 'rgba(56, 189, 248, 0.2)'
+                          : 'rgba(255, 255, 255, 0.04)',
+                      color: activeSpecIndex === i ? '#38bdf8' : '#777777',
+                      border:
+                        activeSpecIndex === i
+                          ? '1px solid rgba(56, 189, 248, 0.4)'
+                          : '1px solid transparent',
+                    }}
+                  >
+                    0{i + 1}. {h.title.split(' ')[0]}
+                  </button>
+                ))}
+              </div>
+
+              {/* Active Spec Info Box */}
+              <div
+                className="p-4 rounded-xl border"
+                style={{
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  borderColor: 'rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <div className="text-xs font-semibold text-white mb-1">
+                  {activeProduct.specs[activeSpecIndex]?.title}
+                </div>
+                <div className="text-[11px] text-cyan-400 font-mono mb-2">
+                  {activeProduct.specs[activeSpecIndex]?.subtitle}
+                </div>
+                <div className="text-[11px] text-neutral-300 leading-relaxed">
+                  {activeProduct.specs[activeSpecIndex]?.desc}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Freelance Commission Quote Box */}
+          <div
+            className="p-5 rounded-2xl border mt-6"
             style={{
-              background: '#c8f0ff',
-              color: '#050505',
-              fontFamily: "'Space Grotesk', sans-serif",
-              boxShadow: '0 0 20px rgba(200, 240, 255, 0.25)',
-            }}
-            onMouseEnter={(e) => {
-              ; (e.currentTarget as HTMLAnchorElement).style.background = '#ffffff'
-                ; (e.currentTarget as HTMLAnchorElement).style.boxShadow =
-                  '0 0 28px rgba(200, 240, 255, 0.45)'
-            }}
-            onMouseLeave={(e) => {
-              ; (e.currentTarget as HTMLAnchorElement).style.background = '#c8f0ff'
-                ; (e.currentTarget as HTMLAnchorElement).style.boxShadow =
-                  '0 0 20px rgba(200, 240, 255, 0.25)'
+              background:
+                'linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(99, 102, 241, 0.1) 100%)',
+              borderColor: 'rgba(56, 189, 248, 0.25)',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
             }}
           >
-            <span>Embed in Your Store</span>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M3 8h10M9 4l4 4-4 4"
-                stroke="#050505"
-                strokeWidth="1.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </a>
-        </div>
-      </footer>
+            <div className="flex items-center justify-between text-xs mb-2">
+              <span className="text-neutral-400 font-mono">Freelance 3D CAD Fee:</span>
+              <span className="text-cyan-300 font-mono font-bold text-sm">
+                {activeProduct.freelanceFee}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-xs mb-4">
+              <span className="text-neutral-400 font-mono">Turnaround:</span>
+              <span className="text-white font-mono">{activeProduct.turnaround}</span>
+            </div>
+
+            <button
+              type="button"
+              id="showroom-embed-cta"
+              onClick={handleEnquireWhatsApp}
+              className="w-full py-3 rounded-xl text-xs font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                background: '#c8f0ff',
+                color: '#050505',
+              }}
+            >
+              <span>Commission This CAD Model</span>
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                <path
+                  d="M1 7h12M7 1l6 6-6 6"
+                  stroke="#050505"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </aside>
+      </main>
     </div>
   )
 }

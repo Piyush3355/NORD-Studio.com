@@ -1,8 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react'
 import Navbar from './components/Navbar'
 import HeroSection from './components/HeroSection'
-import InteractiveShowcaseSection from './components/InteractiveShowcaseSection'
-import ProjectEstimatorSection from './components/ProjectEstimatorSection'
 import WhyNordSection from './components/WhyNordSection'
 import PortfolioSection from './components/PortfolioSection'
 import ReviewsSection from './components/ReviewsSection'
@@ -92,10 +90,8 @@ export default function App() {
               onNavigateToHome={(sec) => navigateTo('home', sec)}
             />
             <main>
-              <HeroSection />
-              <InteractiveShowcaseSection />
+              <HeroSection onNavigateToShowroom={() => navigateTo('showroom')} />
               <WhyNordSection />
-              <ProjectEstimatorSection />
               <PortfolioSection />
               <ReviewsSection />
               <ContactSection />

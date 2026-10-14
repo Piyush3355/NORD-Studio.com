@@ -1,7 +1,11 @@
 import { useRef, useEffect, useState } from 'react'
 import * as THREE from 'three'
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  onNavigateToShowroom?: () => void
+}
+
+export default function HeroSection({ onNavigateToShowroom }: HeroSectionProps) {
   const vantaRef = useRef<HTMLDivElement>(null)
   const vantaEffectRef = useRef<{ destroy: () => void } | null>(null)
   const [visible, setVisible] = useState(false)
@@ -185,9 +189,75 @@ export default function HeroSection() {
 
         {/* CTA row */}
         <div
-          className="flex items-center gap-6 mt-10 pointer-events-auto"
+          className="flex items-center gap-4 mt-10 pointer-events-auto"
           style={{ flexWrap: 'wrap' }}
         >
+          {onNavigateToShowroom && (
+            <button
+              type="button"
+              id="hero-cta-showroom"
+              onClick={onNavigateToShowroom}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.65rem',
+                background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.16) 0%, rgba(99, 102, 241, 0.22) 100%)',
+                border: '1px solid rgba(34, 211, 238, 0.45)',
+                boxShadow: '0 0 25px rgba(34, 211, 238, 0.18)',
+                color: '#ffffff',
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 600,
+                fontSize: '0.85rem',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                padding: '0.85rem 1.6rem',
+                borderRadius: '2px',
+                cursor: 'pointer',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+              onMouseEnter={e => {
+                const el = e.currentTarget as HTMLButtonElement
+                el.style.background = 'linear-gradient(135deg, rgba(34, 211, 238, 0.32) 0%, rgba(99, 102, 241, 0.38) 100%)'
+                el.style.borderColor = 'rgba(34, 211, 238, 0.85)'
+                el.style.boxShadow = '0 0 35px rgba(34, 211, 238, 0.4)'
+                el.style.transform = 'translateY(-2px)'
+              }}
+              onMouseLeave={e => {
+                const el = e.currentTarget as HTMLButtonElement
+                el.style.background = 'linear-gradient(135deg, rgba(34, 211, 238, 0.16) 0%, rgba(99, 102, 241, 0.22) 100%)'
+                el.style.borderColor = 'rgba(34, 211, 238, 0.45)'
+                el.style.boxShadow = '0 0 25px rgba(34, 211, 238, 0.18)'
+                el.style.transform = 'translateY(0)'
+              }}
+            >
+              <span
+                style={{
+                  display: 'inline-block',
+                  width: '7px',
+                  height: '7px',
+                  borderRadius: '50%',
+                  background: '#22d3ee',
+                  boxShadow: '0 0 8px #22d3ee',
+                }}
+              />
+              <span>3D Product Lab</span>
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '0.62rem',
+                  color: '#22d3ee',
+                  background: 'rgba(34, 211, 238, 0.15)',
+                  padding: '2px 6px',
+                  borderRadius: '3px',
+                  border: '1px solid rgba(34, 211, 238, 0.3)',
+                  letterSpacing: '0.1em',
+                }}
+              >
+                LIVE CAD
+              </span>
+            </button>
+          )}
+
           <a
             href="#portfolio"
             id="cta-work"
