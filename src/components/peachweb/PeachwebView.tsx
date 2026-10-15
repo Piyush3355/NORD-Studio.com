@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense, lazy } from 'react'
+import { useState, Suspense, lazy } from 'react'
 import PeachwebPreloader from './PeachwebPreloader'
 import PeachwebNavbar from './PeachwebNavbar'
 import PeachwebHero from './PeachwebHero'
@@ -19,18 +19,6 @@ interface PeachwebViewProps {
 
 export default function PeachwebView({ onNavigateToShowroom }: PeachwebViewProps) {
   const [loaded, setLoaded] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const total = document.documentElement.scrollHeight - window.innerHeight
-      if (total > 0) {
-        setScrollProgress(window.scrollY / total)
-      }
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   const scrollToSection = (id: string) => {
     if (id === 'top') {
@@ -66,7 +54,7 @@ export default function PeachwebView({ onNavigateToShowroom }: PeachwebViewProps
         }}
       >
         <Suspense fallback={null}>
-          <TwisterHeroCanvas scrollProgress={scrollProgress} />
+          <TwisterHeroCanvas />
         </Suspense>
       </div>
 

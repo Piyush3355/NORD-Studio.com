@@ -1,5 +1,5 @@
-import { useRef, useEffect, useMemo } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { useRef, useEffect, useMemo, useState } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, Environment } from '@react-three/drei'
 import * as THREE from 'three'
 
@@ -228,17 +228,34 @@ function StardustParticles({ count = 64 }: { count?: number }) {
   )
 }
 
-function TwisterModel({ scrollProgress = 0 }: { scrollProgress?: number }) {
+function TwisterModel({ scrollProgress }: { scrollProgress?: number }) {
+  const { size } = useThree()
+  const isMobile = size.width < 768
+
   const groupRef = useRef<THREE.Group>(null)
   const rotatRef = useRef<THREE.Object3D | null>(null)
   const outerRingRef = useRef<THREE.Mesh>(null)
   const innerRingRef = useRef<THREE.Mesh>(null)
   const materialRef = useRef<THREE.MeshPhysicalMaterial | null>(null)
 
-  const prevScrollRef = useRef(scrollProgress)
+  const scrollRef = useRef(0)
+  const prevScrollRef = useRef(0)
   const scrollVelocityRef = useRef(0)
 
   const { scene } = useGLTF('/peachweb/models/twister-v4.glb')
+
+  // Passive high-performance scroll listener (avoids React re-renders)
+  useEffect(() => {
+    const handleScroll = () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight
+      if (total > 0) {
+        scrollRef.current = window.scrollY / total
+      }
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Base scale ratio [0.914, 0.914, 0.401] scaled to refined compact size
   const baseScaleX = 1.65
@@ -287,9 +304,14 @@ function TwisterModel({ scrollProgress = 0 }: { scrollProgress?: number }) {
     if (!groupRef.current) return
     const safeDelta = Math.min(delta, 0.05)
 
+    // Current scroll position from passive ref or prop
+    const activeScroll = typeof scrollProgress === 'number' && scrollProgress > 0
+      ? scrollProgress
+      : scrollRef.current
+
     // Calculate scroll momentum velocity
-    const scrollDelta = Math.abs(scrollProgress - prevScrollRef.current)
-    prevScrollRef.current = scrollProgress
+    const scrollDelta = Math.abs(activeScroll - prevScrollRef.current)
+    prevScrollRef.current = activeScroll
     scrollVelocityRef.current = THREE.MathUtils.lerp(
       scrollVelocityRef.current,
       scrollDelta / Math.max(0.001, safeDelta),
@@ -298,7 +320,7 @@ function TwisterModel({ scrollProgress = 0 }: { scrollProgress?: number }) {
     const scrollBoost = Math.min(0.9, scrollVelocityRef.current * 0.25)
 
     // Get interpolated choreography state based on scroll
-    const target = getInterpolatedState(scrollProgress)
+    const target = getInterpolatedState(activeScroll)
 
     // ── Continuous Butter-Smooth Spin with Tactical Scroll Momentum ──
     if (rotatRef.current) {
@@ -308,16 +330,24 @@ function TwisterModel({ scrollProgress = 0 }: { scrollProgress?: number }) {
     // Subtle living wave breathing pulse
     const wavePulse = Math.sin(state.clock.elapsedTime * 2.2) * 0.02
 
-    // Interactive mouse pointer parallax tilt
-    const pointerTiltX = (state.pointer.y || 0) * 0.04
-    const pointerTiltY = (state.pointer.x || 0) * 0.05
+    // Interactive mouse pointer parallax tilt (disabled on touch mobile to prevent touch freeze)
+    const pointerTiltX = isMobile ? 0 : (state.pointer.y || 0) * 0.04
+    const pointerTiltY = isMobile ? 0 : (state.pointer.x || 0) * 0.05
 
     // Frame-rate independent liquid smoothing filter
     const smoothFactor = 1.0 - Math.exp(-5.5 * safeDelta)
 
+    // Mobile-responsive coordinate adaptors
+    const mobileXFactor = isMobile ? 0.22 : 1.0
+    const mobileScaleFactor = isMobile ? 0.65 : 1.0
+
+    // On mobile portrait, center in hero and place lower; otherwise gently scale X
+    const targetX = isMobile && target.p < 0.14 ? 0.0 : target.x * mobileXFactor
+    const targetY = isMobile && target.p < 0.14 ? -0.34 : target.y
+
     // Position interpolation (glides across sections)
-    groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, target.x, smoothFactor)
-    groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, target.y + wavePulse * 0.4, smoothFactor)
+    groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, smoothFactor)
+    groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY + wavePulse * 0.4, smoothFactor)
     groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, target.z, smoothFactor)
 
     // Orientation interpolation (multi-axis cinematic rotations)
@@ -329,10 +359,10 @@ function TwisterModel({ scrollProgress = 0 }: { scrollProgress?: number }) {
     groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetRotY, smoothFactor)
     groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, targetRotZ, smoothFactor)
 
-    // Shape Morphing (Non-uniform aspect scale morphing + organic breathing)
-    const finalScaleX = baseScaleX * target.scaleX * (1 + wavePulse)
-    const finalScaleY = baseScaleY * target.scaleY * (1 - wavePulse * 0.5)
-    const finalScaleZ = baseScaleZ * target.scaleZ * (1 + wavePulse * 0.8)
+    // Shape Morphing (Non-uniform aspect scale morphing + organic breathing + mobile scale adapt)
+    const finalScaleX = baseScaleX * target.scaleX * mobileScaleFactor * (1 + wavePulse)
+    const finalScaleY = baseScaleY * target.scaleY * mobileScaleFactor * (1 - wavePulse * 0.5)
+    const finalScaleZ = baseScaleZ * target.scaleZ * mobileScaleFactor * (1 + wavePulse * 0.8)
 
     groupRef.current.scale.x = THREE.MathUtils.lerp(groupRef.current.scale.x, finalScaleX, smoothFactor)
     groupRef.current.scale.y = THREE.MathUtils.lerp(groupRef.current.scale.y, finalScaleY, smoothFactor)
@@ -346,7 +376,7 @@ function TwisterModel({ scrollProgress = 0 }: { scrollProgress?: number }) {
         target.ringTilt * 0.45,
         smoothFactor
       )
-      const ringScale = target.ringExpand
+      const ringScale = target.ringExpand * mobileScaleFactor
       outerRingRef.current.scale.set(ringScale, ringScale, ringScale)
     }
 
@@ -358,7 +388,7 @@ function TwisterModel({ scrollProgress = 0 }: { scrollProgress?: number }) {
         target.ringTilt,
         smoothFactor
       )
-      const innerScale = target.ringExpand * 0.90
+      const innerScale = target.ringExpand * 0.90 * mobileScaleFactor
       innerRingRef.current.scale.set(innerScale, innerScale, innerScale)
     }
 
@@ -420,16 +450,26 @@ function TwisterModel({ scrollProgress = 0 }: { scrollProgress?: number }) {
       ))}
 
       {/* Luminous Stardust Constellation Particles */}
-      <StardustParticles count={64} />
+      <StardustParticles count={isMobile ? 24 : 64} />
     </group>
   )
 }
 
-export default function TwisterHeroCanvas({ scrollProgress = 0 }: { scrollProgress?: number }) {
-  // Soft studio cyclorama backdrop spotlight that smoothly accompanies the 3D model
-  const target = getInterpolatedState(scrollProgress)
-  const spotX = Math.round(50 + target.x * 16)
-  const spotY = Math.round(48 - target.y * 14)
+export default function TwisterHeroCanvas({ scrollProgress }: { scrollProgress?: number }) {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768
+    }
+    return false
+  })
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   return (
     <div
@@ -437,21 +477,38 @@ export default function TwisterHeroCanvas({ scrollProgress = 0 }: { scrollProgre
         width: '100%',
         height: '100%',
         position: 'relative',
-        background: `radial-gradient(circle at ${spotX}% ${spotY}%, #36373d 0%, #1c1d22 35%, #0e0f13 65%, #050505 100%)`,
-        transition: 'background 0.3s ease',
+        background: isMobile
+          ? 'radial-gradient(circle at 50% 45%, #2a2b30 0%, #15161a 45%, #08080a 75%, #050505 100%)'
+          : 'radial-gradient(circle at 62% 48%, #36373d 0%, #1c1d22 35%, #0e0f13 65%, #050505 100%)',
       }}
     >
       <Canvas
-        camera={{ position: [0, 0, 8.4], fov: 30 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        camera={{ position: [0, 0, 8.4], fov: isMobile ? 36 : 30 }}
+        dpr={isMobile ? [1, 1.25] : [1, 2]}
+        gl={{
+          antialias: !isMobile,
+          alpha: true,
+          powerPreference: 'high-performance',
+          precision: isMobile ? 'mediump' : 'highp',
+        }}
       >
-        <ambientLight intensity={0.7} />
-        {/* Dynamic Studio Key & Rim Illumination */}
-        <pointLight position={[6, 5, 5]} intensity={38} color="#ffffff" />
-        <pointLight position={[-5, -4, -2]} intensity={28} color="#e5f0f6" />
-        <pointLight position={[0, -5, 4]} intensity={22} color="#f59e0b" />
-        <directionalLight position={[0, 8, 6]} intensity={1.3} color="#ffffff" />
+        <ambientLight intensity={isMobile ? 0.8 : 0.7} />
+
+        {isMobile ? (
+          // Lightweight high-performance lighting for mobile GPUs
+          <>
+            <directionalLight position={[0, 8, 6]} intensity={1.4} color="#ffffff" />
+            <pointLight position={[3, 4, 4]} intensity={24} color="#e5f0f6" />
+          </>
+        ) : (
+          // Full studio 3-point illumination for desktop
+          <>
+            <pointLight position={[6, 5, 5]} intensity={38} color="#ffffff" />
+            <pointLight position={[-5, -4, -2]} intensity={28} color="#e5f0f6" />
+            <pointLight position={[0, -5, 4]} intensity={22} color="#f59e0b" />
+            <directionalLight position={[0, 8, 6]} intensity={1.3} color="#ffffff" />
+          </>
+        )}
 
         <Environment files="/peachweb/models/studio.hdr" />
 
