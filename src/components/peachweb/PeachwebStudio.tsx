@@ -4,9 +4,9 @@ const CLIENT_LOGOS = [
   { name: 'Sony', src: '/peachweb/logos/sony.svg' },
   { name: 'Prada', src: '/peachweb/logos/prada.svg' },
   { name: 'Google', src: '/peachweb/logos/google.svg' },
-  { name: 'Mercedes-AMG', src: '/peachweb/logos/amg.svg' },
-  { name: 'Nike', src: '/peachweb/logos/nike.svg' },
-  { name: 'Apple Music', src: '/peachweb/logos/apple-music.svg' },
+  // { name: 'Mercedes-AMG', src: '/peachweb/logos/amg.svg' },
+  // { name: 'Nike', src: '/peachweb/logos/nike.svg' },
+  // { name: 'Apple Music', src: '/peachweb/logos/apple-music.svg' },
 ]
 
 export default function PeachwebStudio() {
