@@ -1,14 +1,14 @@
 import { motion } from 'framer-motion'
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 55, scale: 0.95 },
+  hidden: { opacity: 0, y: 30, scale: 0.98 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.7,
-      delay: i * 0.1,
+      duration: 0.45,
+      delay: i * 0.07,
       ease: [0.21, 0.47, 0.32, 0.98],
     },
   }),
@@ -21,7 +21,7 @@ export default function PeachwebApproach() {
       style={{
         position: 'relative',
         width: '100%',
-        padding: 'clamp(80px, 12vh, 140px) clamp(24px, 5vw, 64px)',
+        padding: 'clamp(40px, 6vh, 70px) clamp(20px, 4vw, 40px)',
         color: '#ffffff',
         zIndex: 1,
       }}
@@ -33,7 +33,7 @@ export default function PeachwebApproach() {
         }
         @keyframes float-badge {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
+          50% { transform: translateY(-4px); }
         }
         @keyframes cursor-click {
           0%, 100% { transform: scale(1); }
@@ -43,16 +43,52 @@ export default function PeachwebApproach() {
           0%, 100% { transform: scaleY(0.9); }
           50% { transform: scaleY(1.05); }
         }
+        .approach-grid {
+          display: grid;
+          grid-template-columns: repeat(12, 1fr);
+          gap: 14px;
+        }
+        .approach-card {
+          grid-column: span 12;
+        }
+        @media (min-width: 768px) {
+          .approach-card-builder {
+            grid-column: span 6;
+          }
+          .approach-card-ux {
+            grid-column: span 6;
+          }
+          .approach-card-responsive {
+            grid-column: span 12;
+          }
+        }
+        @media (min-width: 1024px) {
+          .approach-card-3d {
+            grid-column: span 7 !important;
+          }
+          .approach-card-seo {
+            grid-column: span 5 !important;
+          }
+          .approach-card-builder {
+            grid-column: span 4 !important;
+          }
+          .approach-card-ux {
+            grid-column: span 4 !important;
+          }
+          .approach-card-responsive {
+            grid-column: span 4 !important;
+          }
+        }
       `}</style>
 
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+      <div style={{ maxWidth: 1140, margin: '0 auto' }}>
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          style={{ maxWidth: 760, marginBottom: 'clamp(44px, 7vh, 60px)' }}
+          transition={{ duration: 0.45, ease: 'easeOut' }}
+          style={{ maxWidth: 700, marginBottom: 'clamp(24px, 4vh, 34px)' }}
         >
           <div
             style={{
@@ -62,7 +98,7 @@ export default function PeachwebApproach() {
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
               color: 'rgba(255, 255, 255, 0.5)',
-              marginBottom: 16,
+              marginBottom: 10,
             }}
           >
             OUR APPROACH
@@ -71,12 +107,12 @@ export default function PeachwebApproach() {
           <h2
             style={{
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: 'clamp(2.4rem, 4.4vw, 3.6rem)',
+              fontSize: 'clamp(1.85rem, 3.2vw, 2.6rem)',
               fontWeight: 700,
               lineHeight: 1.15,
               letterSpacing: '-0.025em',
               color: '#ffffff',
-              margin: '0 0 16px 0',
+              margin: '0 0 10px 0',
             }}
           >
             Where your ambition meets velocity.
@@ -85,8 +121,8 @@ export default function PeachwebApproach() {
           <p
             style={{
               fontFamily: "'DM Sans', sans-serif",
-              fontSize: '1.05rem',
-              lineHeight: 1.55,
+              fontSize: '0.925rem',
+              lineHeight: 1.45,
               color: 'rgba(255, 255, 255, 0.7)',
               margin: 0,
             }}
@@ -96,45 +132,38 @@ export default function PeachwebApproach() {
         </motion.div>
 
         {/* Bento Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(12, 1fr)',
-            gap: 20,
-          }}
-        >
-          {/* Card 1: 3D Web Design (Large - 7 cols) with Minimalist 3D Wireframe */}
+        <div className="approach-grid">
+          {/* Card 1: 3D Web Design (7 cols) */}
           <motion.div
             custom={0}
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
-            whileHover={{ y: -8, scale: 1.015, transition: { duration: 0.25 } }}
+            whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
+            className="approach-card approach-card-3d"
             style={{
-              gridColumn: 'span 12',
               position: 'relative',
-              borderRadius: 24,
+              borderRadius: 18,
               overflow: 'hidden',
-              minHeight: 400,
+              minHeight: 195,
               background: 'linear-gradient(145deg, #161820 0%, #0c0d12 100%)',
               border: '1px solid rgba(255, 255, 255, 0.1)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              padding: 'clamp(28px, 4vw, 36px)',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+              padding: '20px 24px',
+              boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
             }}
-            className="lg:col-span-7"
           >
-            {/* Minimalist 3D Wireframe Geometry Graphic */}
+            {/* Minimalist 3D Wireframe Graphic */}
             <div
               style={{
                 position: 'absolute',
-                top: 24,
-                right: '4%',
-                width: 220,
-                height: 200,
+                top: 14,
+                right: 18,
+                width: 110,
+                height: 105,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -142,13 +171,13 @@ export default function PeachwebApproach() {
               }}
             >
               <svg
-                width="210"
-                height="190"
+                width="105"
+                height="100"
                 viewBox="0 0 200 180"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 style={{
-                  filter: 'drop-shadow(0 0 16px rgba(255, 115, 56, 0.25))',
+                  filter: 'drop-shadow(0 0 10px rgba(255, 115, 56, 0.25))',
                   animation: 'float-badge 4s ease-in-out infinite',
                 }}
               >
@@ -223,75 +252,73 @@ export default function PeachwebApproach() {
                   </g>
                 ))}
 
-                {/* Minimalist Coordinate Axes Labels */}
+                {/* Coordinate Axes Labels */}
                 <text x="148" y="70" fill="#ffa372" fontSize="9" fontFamily="'Inter', monospace" fontWeight="600">+X</text>
                 <text x="44" y="70" fill="#ffa372" fontSize="9" fontFamily="'Inter', monospace" fontWeight="600">+Y</text>
                 <text x="105" y="44" fill="#ffa372" fontSize="9" fontFamily="'Inter', monospace" fontWeight="600">+Z</text>
               </svg>
             </div>
 
-            {/* Subtle 3D Perspective Grid */}
+            {/* Subtle Grid Pattern */}
             <div
               style={{
                 position: 'absolute',
                 inset: 0,
                 backgroundImage:
                   'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
-                backgroundSize: '36px 36px',
-                maskImage: 'linear-gradient(to bottom, black 40%, transparent 95%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, black 40%, transparent 95%)',
+                backgroundSize: '28px 28px',
+                maskImage: 'linear-gradient(to bottom, black 30%, transparent 95%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, black 30%, transparent 95%)',
                 zIndex: 0,
                 pointerEvents: 'none',
               }}
             />
 
-            {/* Top Row: Title & Badge */}
-            <div style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
-              <div>
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    padding: '5px 12px',
-                    borderRadius: 999,
-                    background: 'rgba(255, 115, 56, 0.12)',
-                    border: '1px solid rgba(255, 115, 56, 0.35)',
-                    color: '#ff9e66',
-                    fontSize: '11px',
-                    fontFamily: "'Inter', sans-serif",
-                    fontWeight: 600,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    marginBottom: 16,
-                  }}
-                >
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff7338', boxShadow: '0 0 8px #ff7338' }} />
-                  WebGL • Interactive 3D
-                </div>
-                <h3
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 'clamp(1.75rem, 2.5vw, 2.1rem)',
-                    fontWeight: 700,
-                    letterSpacing: '-0.02em',
-                    color: '#ffffff',
-                    margin: 0,
-                  }}
-                >
-                  3D Web Design
-                </h3>
+            {/* Top: Badge & Title */}
+            <div style={{ position: 'relative', zIndex: 2 }}>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 5,
+                  padding: '3px 8px',
+                  borderRadius: 999,
+                  background: 'rgba(255, 115, 56, 0.12)',
+                  border: '1px solid rgba(255, 115, 56, 0.35)',
+                  color: '#ff9e66',
+                  fontSize: '9.5px',
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  marginBottom: 8,
+                }}
+              >
+                <span style={{ width: 4.5, height: 4.5, borderRadius: '50%', background: '#ff7338', boxShadow: '0 0 5px #ff7338' }} />
+                WebGL • Interactive 3D
               </div>
+              <h3
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 'clamp(1.25rem, 1.8vw, 1.45rem)',
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  color: '#ffffff',
+                  margin: 0,
+                }}
+              >
+                3D Web Design
+              </h3>
             </div>
 
-            {/* Bottom Row: Description */}
-            <div style={{ position: 'relative', zIndex: 2, maxWidth: 440 }}>
+            {/* Bottom: Description */}
+            <div style={{ position: 'relative', zIndex: 2, maxWidth: 360, marginTop: 12 }}>
               <p
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: '1.05rem',
-                  lineHeight: 1.55,
-                  color: 'rgba(255, 255, 255, 0.85)',
+                  fontSize: '0.84rem',
+                  lineHeight: 1.45,
+                  color: 'rgba(255, 255, 255, 0.8)',
                   margin: 0,
                 }}
               >
@@ -300,38 +327,37 @@ export default function PeachwebApproach() {
             </div>
           </motion.div>
 
-          {/* Card 2: Local SEO (Sleek Dark Obsidian & Radar - 5 cols) */}
+          {/* Card 2: Local SEO (5 cols) */}
           <motion.div
             custom={1}
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
-            whileHover={{ y: -8, scale: 1.015, transition: { duration: 0.25 } }}
+            whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
+            className="approach-card approach-card-seo"
             style={{
-              gridColumn: 'span 12',
               position: 'relative',
-              borderRadius: 24,
+              borderRadius: 18,
               overflow: 'hidden',
-              minHeight: 400,
+              minHeight: 195,
               background: 'linear-gradient(145deg, #121820 0%, #090e14 100%)',
               border: '1px solid rgba(255, 255, 255, 0.1)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              padding: 'clamp(28px, 4vw, 36px)',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+              padding: '20px 24px',
+              boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
             }}
-            className="lg:col-span-5"
           >
-            {/* 3D Radar Scanner Graphic */}
+            {/* Compact 3D Radar Scanner */}
             <div
               style={{
                 position: 'absolute',
-                top: 24,
-                right: 24,
-                width: 170,
-                height: 170,
+                top: 14,
+                right: 16,
+                width: 95,
+                height: 95,
                 borderRadius: '50%',
                 border: '1px solid rgba(0, 230, 180, 0.2)',
                 display: 'flex',
@@ -340,11 +366,10 @@ export default function PeachwebApproach() {
                 pointerEvents: 'none',
               }}
             >
-              {/* Radar rings */}
               <div
                 style={{
                   position: 'absolute',
-                  inset: 20,
+                  inset: 12,
                   borderRadius: '50%',
                   border: '1px dashed rgba(0, 230, 180, 0.25)',
                 }}
@@ -352,63 +377,61 @@ export default function PeachwebApproach() {
               <div
                 style={{
                   position: 'absolute',
-                  inset: 45,
+                  inset: 26,
                   borderRadius: '50%',
                   border: '1px solid rgba(0, 230, 180, 0.35)',
                 }}
               />
-              {/* Radar sweep pulse */}
               <div
                 style={{
                   position: 'absolute',
-                  width: 32,
-                  height: 32,
+                  width: 18,
+                  height: 18,
                   borderRadius: '50%',
-                  background: 'rgba(0, 230, 180, 0.4)',
+                  background: 'rgba(0, 230, 180, 0.35)',
                   animation: 'pulse-radar 2.4s ease-out infinite',
                 }}
               />
-              {/* Center Map Pin Beacon */}
               <div
                 style={{
                   position: 'relative',
-                  width: 14,
-                  height: 14,
+                  width: 8,
+                  height: 8,
                   borderRadius: '50%',
                   background: '#00e6b4',
-                  boxShadow: '0 0 16px #00e6b4',
+                  boxShadow: '0 0 10px #00e6b4',
                 }}
               />
             </div>
 
-            {/* Top Row: Title & Ranking Badges */}
+            {/* Top: Badge & Title */}
             <div style={{ position: 'relative', zIndex: 2 }}>
               <div
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: 8,
-                  padding: '5px 12px',
+                  gap: 5,
+                  padding: '3px 8px',
                   borderRadius: 999,
                   background: 'rgba(0, 230, 180, 0.12)',
                   border: '1px solid rgba(0, 230, 180, 0.35)',
                   color: '#00e6b4',
-                  fontSize: '11px',
+                  fontSize: '9.5px',
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 600,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  marginBottom: 16,
+                  marginBottom: 8,
                 }}
               >
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00e6b4', boxShadow: '0 0 6px #00e6b4' }} />
+                <span style={{ width: 4.5, height: 4.5, borderRadius: '50%', background: '#00e6b4', boxShadow: '0 0 5px #00e6b4' }} />
                 Google 3-Pack • Rank #1
               </div>
 
               <h3
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 'clamp(1.75rem, 2.5vw, 2.1rem)',
+                  fontSize: 'clamp(1.25rem, 1.8vw, 1.45rem)',
                   fontWeight: 700,
                   letterSpacing: '-0.02em',
                   color: '#ffffff',
@@ -418,45 +441,45 @@ export default function PeachwebApproach() {
                 Local SEO
               </h3>
 
-              {/* Stat metrics pill */}
-              <div style={{ display: 'flex', gap: 10, marginTop: 18, flexWrap: 'wrap' }}>
-                <div
+              {/* Compact Metrics */}
+              <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
+                <span
                   style={{
-                    padding: '8px 14px',
-                    borderRadius: 12,
+                    padding: '3px 8px',
+                    borderRadius: 6,
                     background: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     fontFamily: "'Inter', sans-serif",
-                    fontSize: '12px',
+                    fontSize: '10.5px',
                     color: '#ffffff',
                   }}
                 >
-                  <strong style={{ color: '#00e6b4', fontSize: '13px' }}>+340%</strong> Impressions
-                </div>
-                <div
+                  <strong style={{ color: '#00e6b4' }}>+340%</strong> Traffic
+                </span>
+                <span
                   style={{
-                    padding: '8px 14px',
-                    borderRadius: 12,
+                    padding: '3px 8px',
+                    borderRadius: 6,
                     background: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     fontFamily: "'Inter', sans-serif",
-                    fontSize: '12px',
+                    fontSize: '10.5px',
                     color: '#ffffff',
                   }}
                 >
-                  <strong style={{ color: '#ffb347', fontSize: '13px' }}>4.9 ★</strong> Rating
-                </div>
+                  <strong style={{ color: '#ffb347' }}>4.9 ★</strong> Rating
+                </span>
               </div>
             </div>
 
-            {/* Bottom Row: Description */}
-            <div style={{ position: 'relative', zIndex: 2 }}>
+            {/* Bottom: Description */}
+            <div style={{ position: 'relative', zIndex: 2, marginTop: 12 }}>
               <p
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: '1rem',
-                  lineHeight: 1.5,
-                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontSize: '0.84rem',
+                  lineHeight: 1.45,
+                  color: 'rgba(255, 255, 255, 0.75)',
                   margin: 0,
                 }}
               >
@@ -465,41 +488,40 @@ export default function PeachwebApproach() {
             </div>
           </motion.div>
 
-          {/* Card 3: Business Builder (4 cols) with 3D Growth Columns */}
+          {/* Card 3: Business Builder (4 cols) */}
           <motion.div
             custom={2}
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
-            whileHover={{ y: -8, scale: 1.015, transition: { duration: 0.25 } }}
+            whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
+            className="approach-card approach-card-builder"
             style={{
-              gridColumn: 'span 12',
               position: 'relative',
-              borderRadius: 24,
+              borderRadius: 18,
               overflow: 'hidden',
-              minHeight: 340,
+              minHeight: 180,
               background: 'linear-gradient(145deg, #141722 0%, #0c0e16 100%)',
               border: '1px solid rgba(255, 255, 255, 0.1)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              padding: 'clamp(24px, 3.5vw, 32px)',
-              boxShadow: '0 16px 40px rgba(0,0,0,0.4)',
+              padding: '18px 20px',
+              boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
             }}
-            className="md:col-span-4"
           >
-            {/* 3D Growth Bars Background Visual */}
+            {/* Compact Growth Bars */}
             <div
               style={{
                 position: 'absolute',
-                top: 24,
-                right: 20,
-                width: 140,
-                height: 100,
+                top: 16,
+                right: 16,
+                width: 75,
+                height: 44,
                 display: 'flex',
                 alignItems: 'flex-end',
-                gap: 10,
+                gap: 5,
                 opacity: 0.85,
                 pointerEvents: 'none',
               }}
@@ -513,11 +535,11 @@ export default function PeachwebApproach() {
                 <div
                   key={i}
                   style={{
-                    width: 18,
+                    width: 10,
                     height: `${bar.h}%`,
-                    borderRadius: '6px 6px 2px 2px',
+                    borderRadius: '3px 3px 1px 1px',
                     background: `linear-gradient(to top, ${bar.c}, #8ab4ff)`,
-                    boxShadow: i === 3 ? '0 0 16px rgba(88, 140, 255, 0.6)' : 'none',
+                    boxShadow: i === 3 ? '0 0 10px rgba(88, 140, 255, 0.6)' : 'none',
                     animation: `bar-grow ${2.2 + i * 0.3}s ease-in-out infinite alternate`,
                     transformOrigin: 'bottom',
                   }}
@@ -525,22 +547,22 @@ export default function PeachwebApproach() {
               ))}
             </div>
 
-            {/* Top: Title & Badge */}
+            {/* Top: Badge & Title */}
             <div style={{ position: 'relative', zIndex: 1 }}>
               <div
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: 6,
-                  padding: '4px 10px',
+                  gap: 4,
+                  padding: '2.5px 7px',
                   borderRadius: 999,
                   background: 'rgba(88, 140, 255, 0.15)',
                   border: '1px solid rgba(88, 140, 255, 0.3)',
                   color: '#8ab4ff',
-                  fontSize: '11px',
+                  fontSize: '9.5px',
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 600,
-                  marginBottom: 12,
+                  marginBottom: 8,
                 }}
               >
                 <span>↑ 185%</span> Scaled Growth
@@ -548,7 +570,7 @@ export default function PeachwebApproach() {
               <h3
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: '1.5rem',
+                  fontSize: '1.2rem',
                   fontWeight: 700,
                   color: '#ffffff',
                   margin: 0,
@@ -559,12 +581,12 @@ export default function PeachwebApproach() {
             </div>
 
             {/* Bottom: Description */}
-            <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ position: 'relative', zIndex: 1, marginTop: 10 }}>
               <p
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: '0.925rem',
-                  lineHeight: 1.5,
+                  fontSize: '0.825rem',
+                  lineHeight: 1.45,
                   color: 'rgba(255, 255, 255, 0.75)',
                   margin: 0,
                 }}
@@ -574,124 +596,110 @@ export default function PeachwebApproach() {
             </div>
           </motion.div>
 
-          {/* Card 4: User Experience (4 cols) with Interactive UX Card Stack */}
+          {/* Card 4: User Experience (4 cols) */}
           <motion.div
             custom={3}
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
-            whileHover={{ y: -8, scale: 1.015, transition: { duration: 0.25 } }}
+            whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
+            className="approach-card approach-card-ux"
             style={{
-              gridColumn: 'span 12',
               position: 'relative',
-              borderRadius: 24,
+              borderRadius: 18,
               overflow: 'hidden',
-              minHeight: 340,
+              minHeight: 180,
               background: 'linear-gradient(145deg, #2b1812 0%, #160d0a 100%)',
               border: '1px solid rgba(255, 138, 88, 0.25)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              padding: 'clamp(24px, 3.5vw, 32px)',
-              boxShadow: '0 16px 40px rgba(119, 58, 32, 0.3)',
+              padding: '18px 20px',
+              boxShadow: '0 12px 30px rgba(119, 58, 32, 0.3)',
             }}
-            className="md:col-span-4"
           >
-            {/* UX Micro-Interaction Visual Mockup */}
+            {/* Compact UX Mockup */}
             <div
               style={{
                 position: 'absolute',
-                top: 24,
-                right: 20,
-                width: 140,
-                height: 95,
+                top: 16,
+                right: 14,
+                width: 80,
+                height: 52,
                 perspective: 600,
                 pointerEvents: 'none',
               }}
             >
-              {/* Back card */}
               <div
                 style={{
                   position: 'absolute',
                   top: 0,
-                  right: 12,
-                  width: 100,
-                  height: 60,
-                  borderRadius: 12,
+                  right: 6,
+                  width: 58,
+                  height: 35,
+                  borderRadius: 6,
                   background: 'rgba(255, 115, 56, 0.1)',
                   border: '1px solid rgba(255, 115, 56, 0.2)',
                   transform: 'rotate(8deg)',
                 }}
               />
-              {/* Front glass card with toggle */}
               <div
                 style={{
                   position: 'absolute',
-                  top: 14,
+                  top: 6,
                   right: 0,
-                  width: 110,
-                  height: 68,
-                  borderRadius: 12,
+                  width: 65,
+                  height: 40,
+                  borderRadius: 6,
                   background: 'rgba(255, 255, 255, 0.08)',
-                  backdropFilter: 'blur(8px)',
+                  backdropFilter: 'blur(6px)',
                   border: '1px solid rgba(255, 138, 88, 0.4)',
-                  padding: '8px 10px',
+                  padding: '5px 6px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                   transform: 'rotate(-4deg)',
-                  boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ width: 24, height: 5, borderRadius: 4, background: 'rgba(255,255,255,0.4)' }} />
-                  {/* Active toggle */}
+                  <div style={{ width: 14, height: 2.5, borderRadius: 1.5, background: 'rgba(255,255,255,0.4)' }} />
                   <div
                     style={{
-                      width: 26,
-                      height: 14,
-                      borderRadius: 10,
+                      width: 14,
+                      height: 8,
+                      borderRadius: 4,
                       background: '#ff7338',
-                      position: 'relative',
                       display: 'flex',
                       alignItems: 'center',
-                      padding: 2,
+                      padding: 1,
                     }}
                   >
-                    <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffffff', marginLeft: 'auto' }} />
+                    <div style={{ width: 5.5, height: 5.5, borderRadius: '50%', background: '#ffffff', marginLeft: 'auto' }} />
                   </div>
                 </div>
-                {/* Pointer icon */}
-                <div
-                  style={{
-                    alignSelf: 'flex-end',
-                    color: '#ff9e66',
-                    fontSize: '13px',
-                    animation: 'cursor-click 1.8s ease-in-out infinite',
-                  }}
-                >
+                <div style={{ alignSelf: 'flex-end', color: '#ff9e66', fontSize: '10px', animation: 'cursor-click 1.8s ease-in-out infinite' }}>
                   ↖
                 </div>
               </div>
             </div>
 
-            {/* Top: Title & Badge */}
+            {/* Top: Badge & Title */}
             <div style={{ position: 'relative', zIndex: 1 }}>
               <div
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: 6,
-                  padding: '4px 10px',
+                  gap: 4,
+                  padding: '2.5px 7px',
                   borderRadius: 999,
                   background: 'rgba(255, 115, 56, 0.18)',
                   border: '1px solid rgba(255, 115, 56, 0.35)',
                   color: '#ffa372',
-                  fontSize: '11px',
+                  fontSize: '9.5px',
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 600,
-                  marginBottom: 12,
+                  marginBottom: 8,
                 }}
               >
                 <span>★ 99.4%</span> Flow Score
@@ -699,7 +707,7 @@ export default function PeachwebApproach() {
               <h3
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: '1.5rem',
+                  fontSize: '1.2rem',
                   fontWeight: 700,
                   color: '#ffffff',
                   margin: 0,
@@ -710,13 +718,13 @@ export default function PeachwebApproach() {
             </div>
 
             {/* Bottom: Description */}
-            <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ position: 'relative', zIndex: 1, marginTop: 10 }}>
               <p
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: '0.925rem',
-                  lineHeight: 1.5,
-                  color: 'rgba(255, 255, 255, 0.85)',
+                  fontSize: '0.825rem',
+                  lineHeight: 1.45,
+                  color: 'rgba(255, 255, 255, 0.8)',
                   margin: 0,
                 }}
               >
@@ -725,111 +733,107 @@ export default function PeachwebApproach() {
             </div>
           </motion.div>
 
-          {/* Card 5: Responsive (4 cols) with Multi-Device Frame Visual */}
+          {/* Card 5: Responsive (4 cols) */}
           <motion.div
             custom={4}
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
-            whileHover={{ y: -8, scale: 1.015, transition: { duration: 0.25 } }}
+            whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
+            className="approach-card approach-card-responsive"
             style={{
-              gridColumn: 'span 12',
               position: 'relative',
-              borderRadius: 24,
+              borderRadius: 18,
               overflow: 'hidden',
-              minHeight: 340,
+              minHeight: 180,
               background: 'linear-gradient(145deg, #131924 0%, #0a0e16 100%)',
               border: '1px solid rgba(255, 255, 255, 0.1)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              padding: 'clamp(24px, 3.5vw, 32px)',
-              boxShadow: '0 16px 40px rgba(0,0,0,0.4)',
+              padding: '18px 20px',
+              boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
             }}
-            className="md:col-span-4"
           >
-            {/* Multi-Device 3D Wireframe Visual */}
+            {/* Compact Responsive Wireframe */}
             <div
               style={{
                 position: 'absolute',
-                top: 24,
-                right: 20,
-                width: 140,
-                height: 95,
+                top: 16,
+                right: 14,
+                width: 80,
+                height: 52,
                 pointerEvents: 'none',
               }}
             >
-              {/* Desktop Frame */}
               <div
                 style={{
                   position: 'absolute',
                   top: 0,
-                  right: 20,
-                  width: 110,
-                  height: 68,
-                  borderRadius: 8,
+                  right: 12,
+                  width: 60,
+                  height: 38,
+                  borderRadius: 5,
                   background: 'rgba(255, 255, 255, 0.04)',
                   border: '1px solid rgba(0, 200, 255, 0.3)',
-                  padding: 5,
+                  padding: 3,
                 }}
               >
-                <div style={{ display: 'flex', gap: 3, marginBottom: 5 }}>
-                  <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#ff5f56' }} />
-                  <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#ffbd2e' }} />
-                  <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#27c93f' }} />
+                <div style={{ display: 'flex', gap: 2, marginBottom: 2 }}>
+                  <div style={{ width: 2.5, height: 2.5, borderRadius: '50%', background: '#ff5f56' }} />
+                  <div style={{ width: 2.5, height: 2.5, borderRadius: '50%', background: '#ffbd2e' }} />
+                  <div style={{ width: 2.5, height: 2.5, borderRadius: '50%', background: '#27c93f' }} />
                 </div>
-                <div style={{ width: '80%', height: 4, borderRadius: 2, background: 'rgba(0, 200, 255, 0.3)' }} />
+                <div style={{ width: '80%', height: 2.5, borderRadius: 1.5, background: 'rgba(0, 200, 255, 0.3)' }} />
               </div>
 
-              {/* Mobile Phone Mockup overlapping */}
               <div
                 style={{
                   position: 'absolute',
-                  bottom: 6,
-                  right: 6,
-                  width: 44,
-                  height: 62,
-                  borderRadius: 10,
+                  bottom: 2,
+                  right: 2,
+                  width: 25,
+                  height: 35,
+                  borderRadius: 5,
                   background: 'rgba(10, 15, 25, 0.9)',
-                  border: '1.5px solid rgba(0, 200, 255, 0.6)',
-                  padding: 4,
-                  boxShadow: '0 8px 16px rgba(0,0,0,0.5)',
+                  border: '1.2px solid rgba(0, 200, 255, 0.6)',
+                  padding: 2,
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                 }}
               >
-                <div style={{ width: 14, height: 2, borderRadius: 2, background: 'rgba(255,255,255,0.4)', alignSelf: 'center' }} />
-                <div style={{ width: '100%', height: 24, borderRadius: 4, background: 'rgba(0, 200, 255, 0.15)', border: '1px dashed rgba(0, 200, 255, 0.3)' }} />
-                <div style={{ width: 8, height: 8, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.3)', alignSelf: 'center' }} />
+                <div style={{ width: 6, height: 1.2, borderRadius: 1, background: 'rgba(255,255,255,0.4)', alignSelf: 'center' }} />
+                <div style={{ width: '100%', height: 13, borderRadius: 2.5, background: 'rgba(0, 200, 255, 0.15)', border: '0.8px dashed rgba(0, 200, 255, 0.3)' }} />
+                <div style={{ width: 4, height: 4, borderRadius: '50%', border: '0.8px solid rgba(255,255,255,0.3)', alignSelf: 'center' }} />
               </div>
             </div>
 
-            {/* Top: Title & Badge */}
+            {/* Top: Badge & Title */}
             <div style={{ position: 'relative', zIndex: 1 }}>
               <div
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: 6,
-                  padding: '4px 10px',
+                  gap: 4,
+                  padding: '2.5px 7px',
                   borderRadius: 999,
                   background: 'rgba(0, 200, 255, 0.12)',
                   border: '1px solid rgba(0, 200, 255, 0.3)',
                   color: '#38d5ff',
-                  fontSize: '11px',
+                  fontSize: '9.5px',
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 600,
-                  marginBottom: 12,
+                  marginBottom: 8,
                 }}
               >
-                <span>4K → Mobile</span> Fluid Layout
+                <span>4K → Mobile</span> Fluid
               </div>
               <h3
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: '1.5rem',
+                  fontSize: '1.2rem',
                   fontWeight: 700,
                   color: '#ffffff',
                   margin: 0,
@@ -840,12 +844,12 @@ export default function PeachwebApproach() {
             </div>
 
             {/* Bottom: Description */}
-            <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ position: 'relative', zIndex: 1, marginTop: 10 }}>
               <p
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
-                  fontSize: '0.925rem',
-                  lineHeight: 1.5,
+                  fontSize: '0.825rem',
+                  lineHeight: 1.45,
                   color: 'rgba(255, 255, 255, 0.75)',
                   margin: 0,
                 }}
@@ -859,4 +863,3 @@ export default function PeachwebApproach() {
     </section>
   )
 }
-
