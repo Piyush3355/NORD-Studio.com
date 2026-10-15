@@ -3,12 +3,12 @@ interface PeachwebStatsProps {
 }
 
 const STATS = [
-  { val: '50 +', label: 'Projects Concluded' },
+  { val: '5', label: 'Projects Concluded' },
   { val: '4 weeks', label: 'Average Project Time' },
-  { val: '- 20%', label: 'Marketing Cost' },
+  { val: '- 40%', label: 'Marketing Cost' },
   { val: 'x 5', label: 'Engagement Boost' },
-  { val: '+ 50', label: 'Happy clients' },
-  { val: '8 years', label: 'Experience' },
+  { val: '6', label: 'Happy clients' },
+  { val: '2 years', label: 'Experience' },
 ]
 
 export default function PeachwebStats({ onGetStarted }: PeachwebStatsProps) {
