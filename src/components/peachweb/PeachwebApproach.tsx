@@ -1,46 +1,4 @@
-import { useRef, Suspense } from 'react'
 import { motion } from 'framer-motion'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { Float } from '@react-three/drei'
-import * as THREE from 'three'
-
-function TorusKnot3D() {
-  const meshRef = useRef<THREE.Mesh>(null)
-  const wireRef = useRef<THREE.Mesh>(null)
-
-  useFrame((_, delta) => {
-    const d = Math.min(delta, 0.05)
-    if (meshRef.current) {
-      meshRef.current.rotation.x += d * 0.25
-      meshRef.current.rotation.y += d * 0.4
-    }
-    if (wireRef.current) {
-      wireRef.current.rotation.x -= d * 0.18
-      wireRef.current.rotation.y -= d * 0.25
-    }
-  })
-
-  return (
-    <Float speed={2.2} rotationIntensity={0.5} floatIntensity={0.5}>
-      <mesh ref={meshRef} scale={1.2}>
-        <torusKnotGeometry args={[1, 0.32, 100, 24]} />
-        <meshPhysicalMaterial
-          color="#ff7338"
-          roughness={0.2}
-          metalness={0.85}
-          clearcoat={1}
-          clearcoatRoughness={0.1}
-          emissive="#3d1400"
-          emissiveIntensity={0.45}
-        />
-      </mesh>
-      <mesh ref={wireRef} scale={1.3}>
-        <torusKnotGeometry args={[1, 0.32, 48, 12]} />
-        <meshBasicMaterial color="#ffa372" wireframe transparent opacity={0.3} />
-      </mesh>
-    </Float>
-  )
-}
 
 const cardVariants = {
   hidden: { opacity: 0, y: 55, scale: 0.95 },
@@ -145,7 +103,7 @@ export default function PeachwebApproach() {
             gap: 20,
           }}
         >
-          {/* Card 1: 3D Web Design (Large - 7 cols) with Live 3D Canvas */}
+          {/* Card 1: 3D Web Design (Large - 7 cols) with Minimalist 3D Wireframe */}
           <motion.div
             custom={0}
             variants={cardVariants}
@@ -169,49 +127,110 @@ export default function PeachwebApproach() {
             }}
             className="lg:col-span-7"
           >
-            {/* Live 3D Background Canvas */}
+            {/* Minimalist 3D Wireframe Geometry Graphic */}
             <div
               style={{
                 position: 'absolute',
-                top: 0,
-                right: '-5%',
-                width: '65%',
-                height: '100%',
+                top: 24,
+                right: '4%',
+                width: 220,
+                height: 200,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 pointerEvents: 'none',
-                zIndex: 1,
-                opacity: 0.95,
               }}
             >
-              <Suspense fallback={null}>
-                <Canvas
-                  camera={{ position: [0, 0, 4.3], fov: 45 }}
-                  dpr={[1, 2]}
-                  gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-                >
-                  <ambientLight intensity={0.8} />
-                  <pointLight position={[5, 5, 5]} intensity={40} color="#ff9e66" />
-                  <pointLight position={[-4, -3, -2]} intensity={25} color="#55aaff" />
-                  <TorusKnot3D />
-                </Canvas>
-              </Suspense>
+              <svg
+                width="210"
+                height="190"
+                viewBox="0 0 200 180"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{
+                  filter: 'drop-shadow(0 0 16px rgba(255, 115, 56, 0.25))',
+                  animation: 'float-badge 4s ease-in-out infinite',
+                }}
+              >
+                {/* 3D Coordinate Grid Plane */}
+                <g opacity="0.25" stroke="#ff7338" strokeWidth="0.8" strokeDasharray="3 3">
+                  <line x1="25" y1="130" x2="175" y2="130" />
+                  <line x1="100" y1="45" x2="100" y2="160" />
+                  <line x1="45" y1="145" x2="155" y2="65" />
+                </g>
+
+                {/* Minimalist 3D Orbital Rings */}
+                <ellipse
+                  cx="100"
+                  cy="95"
+                  rx="75"
+                  ry="24"
+                  stroke="rgba(255, 115, 56, 0.25)"
+                  strokeWidth="1"
+                  strokeDasharray="4 4"
+                  transform="rotate(-15 100 95)"
+                />
+                <ellipse
+                  cx="100"
+                  cy="95"
+                  rx="70"
+                  ry="22"
+                  stroke="rgba(255, 158, 102, 0.4)"
+                  strokeWidth="1.2"
+                  transform="rotate(25 100 95)"
+                />
+
+                {/* Isometric 3D Cube Facets */}
+                <polygon
+                  points="100,50 142,72 100,96 58,72"
+                  fill="rgba(255, 115, 56, 0.12)"
+                  stroke="#ffa372"
+                  strokeWidth="1.6"
+                />
+                <polygon
+                  points="58,72 100,96 100,140 58,118"
+                  fill="rgba(255, 115, 56, 0.05)"
+                  stroke="#ff7338"
+                  strokeWidth="1.6"
+                />
+                <polygon
+                  points="100,96 142,72 142,118 100,140"
+                  fill="rgba(255, 115, 56, 0.18)"
+                  stroke="#ff7338"
+                  strokeWidth="1.6"
+                />
+
+                {/* Inner 3D Axis Lines */}
+                <g stroke="rgba(255, 255, 255, 0.25)" strokeWidth="1" strokeDasharray="3 3">
+                  <line x1="100" y1="50" x2="100" y2="96" />
+                  <line x1="58" y1="118" x2="100" y2="96" />
+                  <line x1="142" y1="118" x2="100" y2="96" />
+                </g>
+
+                {/* Glowing 3D Vertex Nodes */}
+                {[
+                  [100, 50],
+                  [142, 72],
+                  [100, 96],
+                  [58, 72],
+                  [100, 140],
+                  [142, 118],
+                  [58, 118],
+                ].map(([cx, cy], i) => (
+                  <g key={i}>
+                    <circle cx={cx} cy={cy} r="3" fill="#ffffff" />
+                    <circle cx={cx} cy={cy} r="5.5" fill="none" stroke="#ff7338" strokeWidth="1.5" opacity="0.85" />
+                  </g>
+                ))}
+
+                {/* Minimalist Coordinate Axes Labels */}
+                <text x="148" y="70" fill="#ffa372" fontSize="9" fontFamily="'Inter', monospace" fontWeight="600">+X</text>
+                <text x="44" y="70" fill="#ffa372" fontSize="9" fontFamily="'Inter', monospace" fontWeight="600">+Y</text>
+                <text x="105" y="44" fill="#ffa372" fontSize="9" fontFamily="'Inter', monospace" fontWeight="600">+Z</text>
+              </svg>
             </div>
 
-            {/* Glowing Accent Glow */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '20%',
-                right: '10%',
-                width: 260,
-                height: 260,
-                background: 'radial-gradient(circle, rgba(255, 115, 56, 0.25) 0%, rgba(0, 0, 0, 0) 70%)',
-                filter: 'blur(40px)',
-                pointerEvents: 'none',
-                zIndex: 0,
-              }}
-            />
-
-            {/* Subtle 3D Depth Grid */}
+            {/* Subtle 3D Perspective Grid */}
             <div
               style={{
                 position: 'absolute',
@@ -228,37 +247,40 @@ export default function PeachwebApproach() {
 
             {/* Top Row: Title & Badge */}
             <div style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
-              <h3
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 'clamp(1.75rem, 2.5vw, 2.1rem)',
-                  fontWeight: 700,
-                  letterSpacing: '-0.02em',
-                  color: '#ffffff',
-                  margin: 0,
-                }}
-              >
-                3D Web Design
-              </h3>
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  padding: '6px 14px',
-                  borderRadius: 999,
-                  background: 'rgba(255, 115, 56, 0.15)',
-                  border: '1px solid rgba(255, 115, 56, 0.4)',
-                  color: '#ff9e66',
-                  fontSize: '11px',
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff7338', boxShadow: '0 0 8px #ff7338' }} />
-                Three.js • 60 FPS
+              <div>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    padding: '5px 12px',
+                    borderRadius: 999,
+                    background: 'rgba(255, 115, 56, 0.12)',
+                    border: '1px solid rgba(255, 115, 56, 0.35)',
+                    color: '#ff9e66',
+                    fontSize: '11px',
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 600,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    marginBottom: 16,
+                  }}
+                >
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff7338', boxShadow: '0 0 8px #ff7338' }} />
+                  WebGL • Interactive 3D
+                </div>
+                <h3
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 'clamp(1.75rem, 2.5vw, 2.1rem)',
+                    fontWeight: 700,
+                    letterSpacing: '-0.02em',
+                    color: '#ffffff',
+                    margin: 0,
+                  }}
+                >
+                  3D Web Design
+                </h3>
               </div>
             </div>
 
