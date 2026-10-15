@@ -50,6 +50,21 @@ export default function PeachwebApproach() {
         }
         .approach-card {
           grid-column: span 12;
+          border-radius: 18px;
+          overflow: hidden;
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justifyContent: space-between;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+          transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+        }
+        .approach-card:hover {
+          border-color: rgba(255, 255, 255, 0.2) !important;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.38) !important;
         }
         @media (min-width: 768px) {
           .approach-card-builder {
@@ -143,17 +158,10 @@ export default function PeachwebApproach() {
             whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
             className="approach-card approach-card-3d"
             style={{
-              position: 'relative',
-              borderRadius: 18,
-              overflow: 'hidden',
               minHeight: 195,
-              background: 'linear-gradient(145deg, #161820 0%, #0c0d12 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
               padding: '20px 24px',
-              boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
+              background:
+                'linear-gradient(135deg, rgba(255, 115, 56, 0.05) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0.02) 100%)',
             }}
           >
             {/* Minimalist 3D Wireframe Graphic */}
@@ -337,17 +345,10 @@ export default function PeachwebApproach() {
             whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
             className="approach-card approach-card-seo"
             style={{
-              position: 'relative',
-              borderRadius: 18,
-              overflow: 'hidden',
               minHeight: 195,
-              background: 'linear-gradient(145deg, #121820 0%, #090e14 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
               padding: '20px 24px',
-              boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
+              background:
+                'linear-gradient(135deg, rgba(0, 230, 180, 0.05) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0.02) 100%)',
             }}
           >
             {/* Compact 3D Radar Scanner */}
@@ -498,17 +499,10 @@ export default function PeachwebApproach() {
             whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
             className="approach-card approach-card-builder"
             style={{
-              position: 'relative',
-              borderRadius: 18,
-              overflow: 'hidden',
               minHeight: 180,
-              background: 'linear-gradient(145deg, #141722 0%, #0c0e16 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
               padding: '18px 20px',
-              boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
+              background:
+                'linear-gradient(135deg, rgba(88, 140, 255, 0.05) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0.02) 100%)',
             }}
           >
             {/* Compact Growth Bars */}
@@ -606,17 +600,10 @@ export default function PeachwebApproach() {
             whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
             className="approach-card approach-card-ux"
             style={{
-              position: 'relative',
-              borderRadius: 18,
-              overflow: 'hidden',
               minHeight: 180,
-              background: 'linear-gradient(145deg, #2b1812 0%, #160d0a 100%)',
-              border: '1px solid rgba(255, 138, 88, 0.25)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
               padding: '18px 20px',
-              boxShadow: '0 12px 30px rgba(119, 58, 32, 0.3)',
+              background:
+                'linear-gradient(135deg, rgba(255, 115, 56, 0.05) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0.02) 100%)',
             }}
           >
             {/* Compact UX Mockup */}
@@ -652,7 +639,7 @@ export default function PeachwebApproach() {
                   width: 65,
                   height: 40,
                   borderRadius: 6,
-                  background: 'rgba(255, 255, 255, 0.08)',
+                  background: 'rgba(255, 255, 255, 0.06)',
                   backdropFilter: 'blur(6px)',
                   border: '1px solid rgba(255, 138, 88, 0.4)',
                   padding: '5px 6px',
@@ -743,17 +730,10 @@ export default function PeachwebApproach() {
             whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
             className="approach-card approach-card-responsive"
             style={{
-              position: 'relative',
-              borderRadius: 18,
-              overflow: 'hidden',
               minHeight: 180,
-              background: 'linear-gradient(145deg, #131924 0%, #0a0e16 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
               padding: '18px 20px',
-              boxShadow: '0 12px 30px rgba(0,0,0,0.35)',
+              background:
+                'linear-gradient(135deg, rgba(56, 213, 255, 0.05) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0.02) 100%)',
             }}
           >
             {/* Compact Responsive Wireframe */}
@@ -796,7 +776,7 @@ export default function PeachwebApproach() {
                   width: 25,
                   height: 35,
                   borderRadius: 5,
-                  background: 'rgba(10, 15, 25, 0.9)',
+                  background: 'rgba(0, 0, 0, 0.6)',
                   border: '1.2px solid rgba(0, 200, 255, 0.6)',
                   padding: 2,
                   display: 'flex',
