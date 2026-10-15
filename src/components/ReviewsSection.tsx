@@ -266,7 +266,7 @@ export default function ReviewsSection() {
     <section
       id="reviews"
       style={{
-        background: '#050505',
+        background: 'transparent',
         padding: '6rem 0',
         position: 'relative',
         overflow: 'hidden',
@@ -410,7 +410,7 @@ export default function ReviewsSection() {
             bottom: 0,
             width: '8vw',
             maxWidth: '120px',
-            background: 'linear-gradient(90deg, #050505 20%, transparent 100%)',
+            background: 'linear-gradient(90deg, #0b0716 20%, transparent 100%)',
             zIndex: 10,
             pointerEvents: 'none',
           }}
@@ -425,7 +425,7 @@ export default function ReviewsSection() {
             bottom: 0,
             width: '8vw',
             maxWidth: '120px',
-            background: 'linear-gradient(-90deg, #050505 20%, transparent 100%)',
+            background: 'linear-gradient(-90deg, #0b0716 20%, transparent 100%)',
             zIndex: 10,
             pointerEvents: 'none',
           }}

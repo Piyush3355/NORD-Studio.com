@@ -124,7 +124,7 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      style={{ background: '#050505', padding: '8rem 6vw 6rem', position: 'relative', overflow: 'hidden' }}
+      style={{ background: 'transparent', padding: '8rem 6vw 6rem', position: 'relative', overflow: 'hidden' }}
     >
       {/* Large background watermark */}
       <div

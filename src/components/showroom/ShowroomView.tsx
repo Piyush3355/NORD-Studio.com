@@ -264,7 +264,8 @@ function ShowcaseModel({
 
   useFrame((_, delta) => {
     if (groupRef.current && autoRotate) {
-      groupRef.current.rotation.y += delta * 0.25
+      const safeDelta = Math.min(delta, 0.05)
+      groupRef.current.rotation.y += safeDelta * 0.35
     }
   })
 

@@ -45,7 +45,7 @@ export default function HeroSection({ onNavigateToShowroom }: HeroSectionProps) 
         if (typeof window !== 'undefined') {
           // Expose THREE globally with legacy compatibility polyfill
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ;(window as any).THREE = threeCompat
+          ; (window as any).THREE = threeCompat
         }
 
         // Dynamically load Vanta Birds
@@ -65,20 +65,20 @@ export default function HeroSection({ onNavigateToShowroom }: HeroSectionProps) 
             minWidth: 200.0,
             scale: 1.0,
             scaleMobile: 1.0,
-            backgroundColor: 0x050505,
-            color1: 0xff3b77,
-            color2: 0x00f5ff,
+            backgroundColor: 0x06111f,
+            color1: 0xff9d4d,
+            color2: 0xe879f9,
             colorMode: 'varianceGradient',
-            birdSize: 1.2,
-            wingSpan: 30.0,
-            speedLimit: 5.0,
-            separation: 20.0,
-            alignment: 20.0,
-            cohesion: 20.0,
+            birdSize: 1.4,
+            wingSpan: 28.0,
+            speedLimit: 4.0,
+            separation: 22.0,
+            alignment: 18.0,
+            cohesion: 18.0,
             quantity: 4.0,
           })
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ;(window as any).vantaEffect = vantaEffectRef.current
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ; (window as any).vantaEffect = vantaEffectRef.current
         }
       } catch (err) {
         console.error('Failed to initialize Vanta Birds:', err)
@@ -100,8 +100,48 @@ export default function HeroSection({ onNavigateToShowroom }: HeroSectionProps) 
     <section
       id="hero"
       className="relative w-full h-screen overflow-hidden"
-      style={{ background: '#050505' }}
+      style={{
+        background: 'linear-gradient(180deg, #06111f 0%, #0d1f3a 35%, #1a1042 65%, #2d0a3a 100%)',
+      }}
     >
+      {/* ── Premium background: glowing radial blobs (Home-only) ── */}
+      {/* Deep Indigo blob — top-left */}
+      <div
+        aria-hidden="true"
+        className="absolute pointer-events-none"
+        style={{
+          top: '-10%',
+          left: '-5%',
+          width: '65vw',
+          height: '65vw',
+          maxWidth: '820px',
+          maxHeight: '820px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, #1e3a5f 0%, transparent 70%)',
+          filter: 'blur(120px)',
+          opacity: 0.8,
+          zIndex: 0,
+        }}
+      />
+      {/* Dark Emerald blob — bottom-right */}
+      <div
+        aria-hidden="true"
+        className="absolute pointer-events-none"
+        style={{
+          bottom: '-8%',
+          right: '-5%',
+          width: '55vw',
+          height: '55vw',
+          maxWidth: '700px',
+          maxHeight: '700px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, #7c1d6f 0%, transparent 70%)',
+          filter: 'blur(120px)',
+          opacity: 0.6,
+          zIndex: 0,
+        }}
+      />
+
       {/* 3D Vanta Birds WebGL Canvas Container */}
       <div
         id="webgl-canvas"
@@ -113,11 +153,11 @@ export default function HeroSection({ onNavigateToShowroom }: HeroSectionProps) 
       {/* Subtle Dark Gradient overlays */}
       <div
         className="absolute inset-x-0 bottom-0 h-48 pointer-events-none z-10"
-        style={{ background: 'linear-gradient(to top, #050505, transparent)' }}
+        style={{ background: 'linear-gradient(to top, #06111f, transparent)' }}
       />
       <div
         className="absolute inset-x-0 top-0 h-32 pointer-events-none z-10"
-        style={{ background: 'linear-gradient(to bottom, #050505 0%, transparent 100%)' }}
+        style={{ background: 'linear-gradient(to bottom, #06111f 0%, transparent 100%)' }}
       />
 
       {/* Hero content overlay */}
@@ -278,15 +318,15 @@ export default function HeroSection({ onNavigateToShowroom }: HeroSectionProps) 
               transition: 'all 0.2s ease',
             }}
             onMouseEnter={e => {
-              ;(e.currentTarget as HTMLAnchorElement).style.background = '#ffffff'
+              ; (e.currentTarget as HTMLAnchorElement).style.background = '#ffffff'
             }}
             onMouseLeave={e => {
-              ;(e.currentTarget as HTMLAnchorElement).style.background = '#c8f0ff'
+              ; (e.currentTarget as HTMLAnchorElement).style.background = '#c8f0ff'
             }}
           >
             View Our Work
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 7h12M7 1l6 6-6 6" stroke="#050505" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M1 7h12M7 1l6 6-6 6" stroke="#050505" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
           <a
@@ -305,10 +345,10 @@ export default function HeroSection({ onNavigateToShowroom }: HeroSectionProps) 
               transition: 'color 0.2s ease',
             }}
             onMouseEnter={e => {
-              ;(e.currentTarget as HTMLAnchorElement).style.color = '#c8f0ff'
+              ; (e.currentTarget as HTMLAnchorElement).style.color = '#c8f0ff'
             }}
             onMouseLeave={e => {
-              ;(e.currentTarget as HTMLAnchorElement).style.color = '#707070'
+              ; (e.currentTarget as HTMLAnchorElement).style.color = '#707070'
             }}
           >
             Why NORD?

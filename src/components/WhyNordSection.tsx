@@ -136,7 +136,7 @@ export default function WhyNordSection() {
     <section
       id="why-nord"
       ref={ref}
-      style={{ background: '#050505', padding: '8rem 6vw', position: 'relative' }}
+      style={{ background: 'transparent', padding: '8rem 6vw', position: 'relative' }}
     >
       {/* Background grid lines */}
       <div
@@ -316,7 +316,7 @@ export default function WhyNordSection() {
                   padding: '0.3rem 0.7rem',
                   borderRadius: '2px',
                   letterSpacing: '0.1em',
-                  background: '#111111',
+                  background: 'rgba(124,58,237,0.08)',
                 }}
               >
                 {tool}

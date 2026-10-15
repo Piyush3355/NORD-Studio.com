@@ -263,7 +263,7 @@ function ProjectCard({ project, index, onOpen }: ProjectCardProps) {
             position: 'relative',
             height: '220px',
             overflow: 'hidden',
-            background: '#090a10',
+            background: 'transparent',
             borderBottom: '1px solid rgba(255,255,255,0.05)',
           }}
         >
@@ -605,7 +605,7 @@ function ProjectModal({
         style={{
           width: '100%',
           maxWidth: '920px',
-          background: '#0a0b12',
+          background: 'transparent',
           border: `1px solid ${project.color}40`,
           borderRadius: '12px',
           overflow: 'hidden',
@@ -698,7 +698,7 @@ function ProjectModal({
               marginBottom: '2rem',
               border: '1px solid rgba(255,255,255,0.08)',
               position: 'relative',
-              background: '#040508',
+              background: 'rgba(139,92,246,0.05)',
             }}
           >
             <img
@@ -1085,16 +1085,28 @@ export default function PortfolioSection() {
                 fontFamily: "'Space Grotesk', sans-serif",
                 fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
                 fontWeight: 700,
-                color: '#ffffff',
                 lineHeight: 1.0,
                 letterSpacing: '-0.04em',
                 margin: 0,
               }}
             >
-              Proven Deployments.
-              <br />
-              <span style={{ color: '#1a1a1a', WebkitTextStroke: '1px #555555' }}>
-                Full-Stack & 3D.
+              <span style={{
+                background: 'linear-gradient(135deg, #a78bfa 0%, #38bdf8 50%, #34d399 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                display: 'block',
+              }}>
+                Proven Deployments.
+              </span>
+              <span style={{
+                background: 'linear-gradient(135deg, #f472b6 0%, #fb923c 55%, #facc15 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                display: 'block',
+              }}>
+                Full-Stack &amp; 3D.
               </span>
             </h2>
 
