@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 30, scale: 0.98 },
   visible: (i: number) => ({
     opacity: 1,
@@ -9,7 +9,7 @@ const cardVariants = {
     transition: {
       duration: 0.45,
       delay: i * 0.07,
-      ease: [0.21, 0.47, 0.32, 0.98],
+      ease: 'easeOut',
     },
   }),
 }
