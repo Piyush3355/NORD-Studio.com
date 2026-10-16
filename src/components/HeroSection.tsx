@@ -49,7 +49,7 @@ export default function HeroSection({ onNavigateToShowroom }: HeroSectionProps) 
         }
 
         // Dynamically load Vanta Birds
-        // @ts-expect-error - vanta has no official typescript declarations
+        // @ts-ignore - vanta has no official typescript declarations
         const vantaModule = await import('vanta/dist/vanta.birds.min')
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const BIRDS = (window as any).VANTA?.BIRDS || vantaModule.default?.default || vantaModule.default || vantaModule
