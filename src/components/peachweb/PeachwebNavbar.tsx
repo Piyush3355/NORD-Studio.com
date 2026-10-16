@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import NordLogo from '../NordLogo'
 
 interface PeachwebNavbarProps {
   onNavigateToSection: (sectionId: string) => void
@@ -59,23 +60,14 @@ export default function PeachwebNavbar({ onNavigateToSection, onNavigateToShowro
         {/* Brandmark / Logo */}
         <a
           href="#top"
+          id="peach-nav-logo"
           onClick={(e) => {
             e.preventDefault()
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            textDecoration: 'none',
-            fontFamily: "'DM Sans', sans-serif",
-            fontWeight: 700,
-            fontSize: '1.25rem',
-            color: '#f59e0b',
-            letterSpacing: '-0.02em',
-          }}
+          style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
         >
-          <span style={{ color: '#d97706', fontStyle: 'italic', marginRight: 1 }}>/</span>logo
+          <NordLogo size={26} variant="full" />
         </a>
 
         {/* Center Nav Links (Desktop) */}

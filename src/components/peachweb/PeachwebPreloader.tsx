@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import NordLogo from '../NordLogo'
 
 export default function PeachwebPreloader({ onLoaded }: { onLoaded: () => void }) {
   const [progress, setProgress] = useState(0)
@@ -136,16 +137,14 @@ export default function PeachwebPreloader({ onLoaded }: { onLoaded: () => void }
         {/* Center Logo */}
         <div
           style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontWeight: 700,
-            fontSize: '1.25rem',
-            color: '#f59e0b',
-            letterSpacing: '-0.02em',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             marginBottom: 4,
             userSelect: 'none',
           }}
         >
-          <span style={{ color: '#d97706', fontStyle: 'italic' }}>/</span>logo
+          <NordLogo size={32} variant="icon" />
         </div>
 
         {/* Percentage */}

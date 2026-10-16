@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600" fill="none">
+
+      <defs>
+        <filter id="ng" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="6" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <radialGradient id="ambglow" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.18" />
+          <stop offset="100%" stop-color="#F59E0B" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+    
+      <!-- Ambient backing glow -->
+      <circle cx="300.0" cy="300.0" r="331.2" fill="url(#ambglow)" />
+
+      <!-- Cube planes -->
+      <polygon points="300.0,35.039999999999964 517.9584,188.4864 300.0,300.0 82.04160000000002,188.4864" fill="#F59E0B" fill-opacity="0.97" />
+      <polygon points="82.04160000000002,188.4864 300.0,300.0 300.0,564.96 82.04160000000002,411.5136" fill="#D97706" fill-opacity="0.93" />
+      <polygon points="517.9584,188.4864 300.0,300.0 300.0,564.96 517.9584,411.5136" fill="#B45309" fill-opacity="0.88" />
+
+      <!-- Clean architectural outlines -->
+      <polygon points="300.0,35.039999999999964 517.9584,188.4864 300.0,300.0 82.04160000000002,188.4864" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="9.0" stroke-linejoin="round" />
+      <polygon points="82.04160000000002,188.4864 300.0,300.0 300.0,564.96 82.04160000000002,411.5136" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="9.0" stroke-linejoin="round" />
+      <polygon points="517.9584,188.4864 300.0,300.0 300.0,564.96 517.9584,411.5136" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="9.0" stroke-linejoin="round" />
+
+      <!-- Vertical center spine -->
+      <line x1="300.0" y1="40.80000000000001" x2="300.0" y2="559.2" stroke="rgba(255,255,255,0.3)" stroke-width="8.4" stroke-linecap="round" />
+
+      <!-- Signature Architectural 'N' mark -->
+      <path d="M 160.608 345.6192 L 160.608 512.8896 M 439.392 254.3808 L 439.392 457.1328 M 160.608 345.6192 L 439.392 457.1328" stroke="#FFFFFF" stroke-width="45.0" stroke-linecap="round" stroke-linejoin="round" filter="url(#ng)" />
+    
+</svg>

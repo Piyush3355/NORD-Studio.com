@@ -1,3 +1,5 @@
+import NordLogo from '../NordLogo'
+
 interface PeachwebFooterProps {
   onGetStarted: () => void
   onNavigateToSection: (sectionId: string) => void
@@ -123,16 +125,10 @@ export default function PeachwebFooter({ onGetStarted, onNavigateToSection }: Pe
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 6,
-                fontFamily: "'DM Sans', sans-serif",
-                fontWeight: 700,
-                fontSize: '1.4rem',
-                color: '#f59e0b',
-                letterSpacing: '-0.02em',
                 marginBottom: 16,
               }}
             >
-              <span style={{ color: '#d97706', fontStyle: 'italic' }}>/</span>logo
+              <NordLogo size={28} variant="full" />
             </div>
             <p
               style={{
@@ -147,10 +143,10 @@ export default function PeachwebFooter({ onGetStarted, onNavigateToSection }: Pe
             >
               Speak to Nord Studios today.{' '}
               <a
-                href="mailto:hello@nordstudios.com"
+                href="mailto:hello.nordstudios@gmail.com"
                 style={{ color: '#ffffff', textDecoration: 'underline', textUnderlineOffset: 4 }}
               >
-                hello@nordstudios.com
+                hello.nordstudios@gmail.com
               </a>
             </p>
           </div>
@@ -255,7 +251,7 @@ export default function PeachwebFooter({ onGetStarted, onNavigateToSection }: Pe
           }}
         >
           <div>© 2026 Nord Studios Inc. All rights reserved.</div>
-          <div>hello@nordstudios.com</div>
+          <div>hello.nordstudios@gmail.com</div>
         </div>
       </div>
     </footer>
