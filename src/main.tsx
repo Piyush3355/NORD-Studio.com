@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import * as THREE from 'three'
 import App from './App.tsx'
@@ -30,8 +29,4 @@ if (typeof window !== 'undefined') {
   })
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+ReactDOM.createRoot(document.getElementById('root')!).render(<App />)

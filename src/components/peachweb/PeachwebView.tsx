@@ -1,4 +1,4 @@
-import { useState, Suspense, lazy } from 'react'
+import { useState, Suspense } from 'react'
 import PeachwebPreloader from './PeachwebPreloader'
 import PeachwebNavbar from './PeachwebNavbar'
 import PeachwebHero from './PeachwebHero'
@@ -10,8 +10,7 @@ import PeachwebProcess from './PeachwebProcess'
 import PeachwebStats from './PeachwebStats'
 import PeachwebTestimonials from './PeachwebTestimonials'
 import PeachwebFooter from './PeachwebFooter'
-
-const TwisterHeroCanvas = lazy(() => import('./TwisterHeroCanvas'))
+import TwisterHeroCanvas from './TwisterHeroCanvas'
 
 interface PeachwebViewProps {
   onNavigateToShowroom?: () => void

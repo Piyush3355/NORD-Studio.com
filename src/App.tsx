@@ -7,8 +7,7 @@ import ReviewsSection from './components/ReviewsSection'
 import ContactSection from './components/ContactSection'
 
 const ShowroomView = lazy(() => import('./components/showroom/ShowroomView'))
-
-const PeachwebView = lazy(() => import('./components/peachweb/PeachwebView'))
+import PeachwebView from './components/peachweb/PeachwebView'
 
 function LoadingFallback() {
   return (
