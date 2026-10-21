@@ -1,12 +1,8 @@
 const CLIENT_LOGOS = [
-  { name: 'Nike', src: '/peachweb/logos/nike.svg' },
-  { name: 'Apple Music', src: '/peachweb/logos/apple-music.svg' },
-  { name: 'Sony', src: '/peachweb/logos/sony.svg' },
-  { name: 'Prada', src: '/peachweb/logos/prada.svg' },
-  { name: 'Google', src: '/peachweb/logos/google.svg' },
-  // { name: 'Mercedes-AMG', src: '/peachweb/logos/amg.svg' },
-  // { name: 'Nike', src: '/peachweb/logos/nike.svg' },
-  // { name: 'Apple Music', src: '/peachweb/logos/apple-music.svg' },
+  { name: 'IDOSTEM', src: '/peachweb/logos/idostem.svg' },
+  { name: 'MELODIFY', src: '/peachweb/logos/melodify.svg' },
+  { name: 'BILLER.IN', src: '/peachweb/logos/biller.svg' },
+  { name: 'LLMIN', src: '/peachweb/logos/llmin.svg' },
 ]
 
 export default function PeachwebStudio() {
@@ -78,7 +74,7 @@ export default function PeachwebStudio() {
               marginBottom: 36,
             }}
           >
-            Trusted by industry leaders.
+            Trusted by
           </h3>
 
           {/* 8-Card Grid */}

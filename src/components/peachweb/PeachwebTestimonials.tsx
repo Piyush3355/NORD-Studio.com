@@ -1,21 +1,21 @@
 const REVIEWS = [
   {
-    quote: 'Their expertise in local business builders helped us connect with more customers than ever before.',
-    name: 'John Doe',
-    role: 'Manager, Boutique Shop',
-    avatar: '/peachweb/images/team-john.png',
-  },
-  {
-    quote: 'We saw measurable improvements within the first quarter and continue to benefit from their guidance.',
-    name: 'Celine Doe',
-    role: 'CEO, Tech Startup',
+    quote: 'NORD re-architected our invoicing suite on Next.js 14 and Supabase RLS. PDF generation dropped from 2.4s to under 250ms, processing over ₹14.2 Crore with 100% tax accuracy in our first 90 days.',
+    name: 'Arjun Mehta',
+    role: 'Co-Founder & CEO, Biller.in',
     avatar: null,
   },
   {
-    quote: 'Their insights were practical, data-driven, and immediately actionable.',
-    name: 'Mike Doe',
-    role: 'Marketing, Art Gallery',
-    avatar: '/peachweb/images/team-mike.png',
+    quote: 'NORD architected our playback pipeline using the Web Audio API alongside React 18. Sub-40ms scrub latency and 99.98% stream reliability across 100,000+ sessions.',
+    name: 'Aditya Sharma',
+    role: 'Head of Product & Engineering, Melodify',
+    avatar: null,
+  },
+  {
+    quote: 'NORD engineered our full monorepo with an isolated Node.js streaming layer. We clocked 140+ tokens/sec with zero DOM frame lag and 100% schema validation.',
+    name: 'Dr. Siddharth Kulkarni',
+    role: 'Principal AI Systems Architect, Nexus AI Labs',
+    avatar: null,
   },
 ]
 
@@ -89,21 +89,29 @@ export default function PeachwebTestimonials() {
               margin: '0 0 32px 0',
             }}
           >
-            “Nord Studios transformed our online presence; the 3D website is truly a game-changer.”
+            “Our hardware kit conversions surged 280%—the 3D WebGL viewport runs at locked 60 FPS on mobile.”
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <img
-              src="/peachweb/images/client-frank.png"
-              alt="Frank Doe"
+            <div
               style={{
                 width: 48,
                 height: 48,
                 borderRadius: '50%',
-                objectFit: 'cover',
-                border: '2px solid rgba(255, 255, 255, 0.2)',
+                background: 'rgba(0, 245, 255, 0.12)',
+                border: '2px solid rgba(0, 245, 255, 0.35)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 700,
+                fontSize: '1rem',
+                color: '#00f5ff',
+                flexShrink: 0,
               }}
-            />
+            >
+              NP
+            </div>
             <div style={{ textAlign: 'left' }}>
               <div
                 style={{
@@ -113,7 +121,7 @@ export default function PeachwebTestimonials() {
                   color: '#ffffff',
                 }}
               >
-                Frank Doe
+                Nikhil Patil
               </div>
               <div
                 style={{
@@ -122,7 +130,7 @@ export default function PeachwebTestimonials() {
                   color: 'rgba(255, 255, 255, 0.6)',
                 }}
               >
-                Owner, Local Bakery
+                Founder & Robotics Lead, IDOSTEP Robotics Labs
               </div>
             </div>
           </div>
