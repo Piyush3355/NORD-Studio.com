@@ -22,8 +22,8 @@ if (typeof window !== 'undefined') {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ;(window as any).THREE = Object.assign({}, THREE, {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any .
+  ; (window as any).THREE = Object.assign({}, THREE, {
     PlaneBufferGeometry: THREE.PlaneGeometry,
     DataTexture: PatchedDataTexture,
   })
